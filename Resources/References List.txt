@@ -1,0 +1,65 @@
+
+Data Collection:
+
+1.) Crime
+
+ - NYC Open Data Hub Api Link: https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i
+ - Use the RSocrata library to extract data
+ - Below is the line of code. It takes approximately 10 minutes to extract data from year 2020 to 2022. It's about 850k rows.
+ - crime_data <- read.socrata("https://data.cityofnewyork.us/resource/qgea-i56i.json?$where=cmplnt_fr_dt between \'2020\' and \'2022\'")
+
+2.) Twitter
+
+	- We've a limited 10 mil quota of tweets for a academi account. I've another two academic accounts which limited to 7 days of tweets and 1 mil quota of tweets. 
+	- I'm not sure the size of tweets from year 2020 to 2022 in NYC region. I'll figure it out over this weekend.
+	- Due to limited quota, I'll share my third academic account if you guys want to play around with it using Rtweets library. Below are the codes:
+ 	- library(rtweet)
+	  appname <- "JAS"
+	  key <- "y35IoaX6uRqG0SHevdkcOwwz0"
+	  secret <- "LTJZX1OYgodqGJRtSnURXP550JIVQSDmnvQR54whvQeVNY8M6e"
+	  access_token <- "600477513-IxVeKsm8EiOhmoPNHLj0jjW0YBs43Hw4MFKeQE74"
+	  access_secret <- "heeGBjyWQNiZOMyrwNCEM9xU7fxMxZJa69UFtX22Ba2qe"
+
+	 twitter_token <- create_token(
+  	 app = appname,
+         consumer_key = key,
+         consumer_secret = secret,
+         access_token = access_token,
+         access_secret = access_secret)
+	 search_tweets('',n=1500, geocode="40.730610,-73.935242,5mi", since = '2022-08-01')
+	
+	- I'll share with you guys other access once I'm sure we have enough quota for everyone to play around or once I've download NYC tweets to a csv file. 
+	- Other access requires this library(academictwitteR) as it uses advacence api technology.
+ 
+
+Research Paper References:
+
+https://www.researchgate.net/publication/357916429_Racism_Detection_by_Analyzing_Differential_Opinions_Through_Sentiment_Analysis_of_Tweets_Using_Stacked_Ensemble_GCR-NN_Model
+
+https://towardsdatascience.com/classifying-hate-speech-an-overview-d307356b9eba
+
+https://phys.org/news/2019-10-online-speech-crimes-minorities.html
+
+https://towardsdatascience.com/deep-learning-for-hate-speech-detection-a-large-scale-empirical-evaluation-92831ded6bb6
+
+https://aclanthology.org/2020.emnlp-main.197/
+
+https://www.rand.org/randeurope/research/projects/linking-hate-speech-online-and-hate-crime.html
+
+https://ieeexplore.ieee.org/document/9684891
+
+https://github.com/pradeep-kumar-r/Hate-Speech-detection-from-Tweets
+
+https://towardsdatascience.com/detecting-hate-tweets-twitter-sentiment-analysis-780d8a82d4f6
+
+https://www.tidytextmining.com/topicmodeling.html
+
+https://www.researchgate.net/publication/357916429_Racism_Detection_by_Analyzing_Differential_Opinions_Through_Sentiment_Analysis_of_Tweets_Using_Stacked_Ensemble_GCR-NN_Model
+
+https://www.sciencedirect.com/science/article/abs/pii/S1359178917301064
+
+https://link.springer.com/article/10.1186/s40163-018-0089-1
+
+https://www.nature.com/articles/s41599-020-0430-7
+
+https://ieeexplore.ieee.org/document/9325485

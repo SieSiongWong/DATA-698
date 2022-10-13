@@ -32,8 +32,6 @@ Joseph Shi\\
 
 ```{R message=FALSE, warning=FALSE, echo=FALSE}
 options(warn=-1)
-if(!require('png')) (install.packages('png'))
-if(!require('grid')) (install.packages('grid'))
 if(!require('tidyverse')) (install.packages('tidyverse'))
 if(!require('academictwitteR')) (install.packages('academictwitteR'))
 if(!require('tidyr')) (install.packages('tidyr'))
@@ -60,6 +58,9 @@ if(!require('tidytext')) (install.packages('tidytext'))
 
 # Introduction
 
+$$\\[0.5in]$$
+![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Proposal\\Architecture of the Proposed Methodology.png")
+
 \newpage
 
 # Literature Review
@@ -67,11 +68,6 @@ if(!require('tidytext')) (install.packages('tidytext'))
 \newpage
 
 # Theory and Hypotheses
-
-```{r warning=FALSE, message=FALSE, echo=FALSE, fig.cap="Architecture of the Proposed Methodology", fig.width=10, fig.height=10}
-img <- readPNG("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Proposal\\Architecture of the Proposed Methodology.png")
-grid.raster(img)
-```
 
 \newpage
 

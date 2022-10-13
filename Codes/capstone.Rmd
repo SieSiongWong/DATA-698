@@ -58,6 +58,10 @@ if(!require('tidytext')) (install.packages('tidytext'))
 
 \newpage
 
+# Introduction
+
+\newpage
+
 # Literature Review
 
 \newpage
@@ -109,7 +113,7 @@ grid.raster(img)
 
 9. Curiel et al. (2020, April 02). *Crime and its fear in social media*. Nature. Retrieved from https://www.nature.com/articles/s41599-020-0430-7#Sec8
 
-10. Sandagiri et al. (2021, January 19). *Detecting Crime Related Twitter Posts using Artificial Neural Networks based Approach*. IEEE Organization. Retrieved from https://ieeexplore.ieee.org/document/9325485
+10. Sandagiri et al. (2021, January 19). *Detecting Crime Related Twitter Posts using Artificial Neural Networks based Approach*. IEEE Xplore. Retrieved from https://ieeexplore.ieee.org/document/9325485
 
 11. Kumar, A. (2022, March 20). *Hate Speech Detection Using Machine Learning*. Vitalflux. Retrieved from https://vitalflux.com/hate-speech-detection-using-machine-learning/#:~:text=The%20techniques%20for%20detecting%20hate,to%20find%20patterns%20in%20data.
 
@@ -126,6 +130,12 @@ grid.raster(img)
 17. Hawdon et al. (2016, July 13). *Exposure to Online Hate in Four Nations: A Cross-National Consideration*. ResearchGate. Retrieved from https://www.researchgate.net/publication/303480309_Exposure_to_Online_Hate_in_Four_Nations_A_Cross-National_Consideration
 
 18. Starosta A. (2019, February 15). *CBuilding NLP Classifiers Cheaply With Transfer Learning and Weak Supervision. Medium*. Retrieved from https://medium.com/sculpt/a-technique-for-building-nlp-classifiers-efficiently-with-transfer-learning-and-weak-supervision-a8e2f21ca9c8
+
+19. Chetty N. & Alathur S. (2018, May 8). *Hate speech review in the context of online social networks*. Retrieved from https://www.sciencedirect.com/science/article/pii/S1359178917301064
+
+20. Miró-Llinares F. & Rodriguez-Sala J.J. (2016, July). *Cyber Hate Speech on Twitter: Analyzing Disruptive Events from Social Media to Build a Violent Communication and Hate Speech taxonomy*. ResearchGate. Retrieved from https://www.researchgate.net/publication/308487177_Cyber_hate_speech_on_twitter_Analyzing_disruptive_events_from_social_media_to_build_a_violent_communication_and_hate_speech_taxonomy
+
+21. Chen et al. (2015, June 8). *Crime prediction using Twitter sentiment and weather*. IEEE Xplore.  Retrieved from https://ieeexplore.ieee.org/abstract/document/7117012/authors#authors
 
 \newpage
 
@@ -312,5 +322,4 @@ data$zipcode <- future_mapply(search_zip2,test2$latitude, test2$longitude)
 
 ```{r}
 ```
-
 

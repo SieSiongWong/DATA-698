@@ -121,7 +121,8 @@ grid.raster(img)
 
 13. Kocon et al. (2021, June 03). *Offensive, aggressive, and hate speech analysis: From data-centric to human-centered approach*. ScienceDirect. Retrieved from https://www.sciencedirect.com/science/article/pii/S0306457321001333
 
-14. Shead, S. (2020, November 19). *Facebook claims A.I. now detects 94.7% of the hate speech that gets removed from its platform*. CNBC. Retrieved from https://www.cnbc.com/2020/11/19/facebook-says-ai-detects-94point7percent-of-hate-speech-removed-from-platform.html#:~:text=Facebook%20announced%20Thursday%20that%20artificial,and%20just%2024%25%20in%202017.
+14. Shead, S. (2020, November 19). *Facebook claims A.I. now detects 94.7% of the hate speech that gets removed from its platform*. CNBC. Retrieved from https://www.cnbc.com/2020/11/19/facebook-says-ai-detects-94point7percent-of-hate-speech-removed-from-platform.html#:  
+~:text=Facebook%20announced%20Thursday%20that%20artificial,and%20just%2024%25%20in%202017.
 
 15. Williams, M. & Burnap, P. (2015, June 25 ). *Cyberhate on Social Media in the Aftermath of Woolwich: A Case Study in Computational Criminology and Big Data*. British Journal of Criminology. Retrieved from https://academic.oup.com/bjc/article/56/2/211/2462519
 

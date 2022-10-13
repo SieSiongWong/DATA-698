@@ -7,13 +7,6 @@ output:
   pdf_document:
     toc: no
     toc_depth: 4
-  html_document:
-    toc: no
-    toc_depth: '2'
-    smart: no
-  word_document:
-    toc: no
-    toc_depth: '2'
 ---
 
 \begin{center}
@@ -36,12 +29,6 @@ Joseph Shi\\
 \end{center}
 
 \pagebreak
-
-```{R message=FALSE, warning=FALSE, echo=FALSE}
-options(warn=-1)
-if(!require('png')) (install.packages('png'))
-if(!require('grid')) (install.packages('grid'))
-```
 
 \newpage
 

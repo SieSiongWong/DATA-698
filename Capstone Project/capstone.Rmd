@@ -58,14 +58,21 @@ if(!require('tidytext')) (install.packages('tidytext'))
 
 # Introduction
 
-$$\\[0.5in]$$
-![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Proposal\\Architecture of the Proposed Methodology.png")
+Many of us spend several hours per week in social media platforms such as Facebook, Twitter, and Instagram to name a few. Although there are many advantages that social media provides e.g. serving as the fifth estate of power, a place to express opinions and such, it has also become a platform for someone to spread hate, cyberbullying, harassments and so on. Messages of hatred and spread of violence could have a high potential for influencing and motivating someone to commit a crime. According to CNN, hate crimes in New York City have increased 76% compared to last year. Many social media companies such as Facebook, have started to control the contents being posted by their users. Because there is a big concern in our society that offensive speech can result in more crimes and eventually become a serious threat to social, political, and cultural stability, we see the need to find a solution. 
+
+Some may argue that the First Amendment allows individuals to express anything they want. Instead of limiting everyone’s freedom of speech openly in social media platforms, there are possible alternatives to deal with this issue. For example, a platform can allow users to turn on or off a switch to hide possible sensitive contents. In order to do this, we need some kind of solution that is able to identify inappropriate speech, tag them, and warn users that their post may not be visible to everyone due to containing sensitive language. 
+
+We believe that offensive speech has a high potential for causing more violent crimes to happen in the city. To make our city a better place to live, we need to find a way not only to identify inappropriate speech in social media platforms and reduce the spread of such speech, but also when to deploy more law enforcement to patrol areas crowded with high numbers of offensive speech in the hope we interrupt crime prematurely. Our research hypothesis is that higher offensive tweets from an area have strong correlation to the number of crimes committed in that area and minority groups are mostly the target. 
+
+The challenging part for our research is to classify the tweets metadata into offensive speech. Defining what is offensive speech such as hate speech can be hard because it’s constantly evolving and often dependent on context. Until today, artificial intelligence still struggles when it comes to identifying hate speech. But we’ve found that quite a few research scientists have tried different approaches to identifying offensive speech in social media text data. The more advanced techniques, deep learning methods such as gated recurrent unit (GRU), convolutional neural networks (CNN), gated convolutional recurrent - neural networks (GCR-NN), and combination of transfer learning and week supervision, are so far giving the best results compared to conventional classification approaches such as logistic regression, naive Bayes, decision tree, random forest, and gradient boosting.
+
+There are many different types of hate speech that target different groups and individuals, and research has been done to differentiate and define them accordingly. Some approaches to the classification of hate speech from Tweeter use the hashtag as a variable for predicting violence and hate message from the tweet. While other approaches for classification of hate speech on social media may also include the development of neural language models. Additionally, there are algorithms that have been created to detect hate speech in digital microenvironments, which facilitate and reduce analysis tasks undergone by law enforcement agencies and service providers. We have also come across research that found there may not be a correlation between social media messages and crime, and others that consider “weather” to be an important environmental factor that affects the occurrence of criminal incidents. There have been many different approaches tried to find a link between social media posts and crime, all with varying results, and what makes this research so interesting is that we may yet find different results that may contribute to this solution.
 
 \newpage
 
 # Literature Review
 
-([\textcolor{cyan}{Williams et al., 2019}](https://academic.oup.com/bjc/article/60/1/93/5537169)) A similar research was conducted to analyze association between online hate speech and offline racism and religion related crimes that occurred in London. A Weka tool was used to develop a machine learning classifier to annotate racism and religion and non-hateful tweets. Besides tweets and crime data, census data such as no qualifications, age, long-term unemployed, and black and minority ethnicity, were considered part of the study. Statistical models were built to study a temporal and spatial association. Random and fixed effects, Poisson regression models, and negative binomial models, which all results show consistent of positive association between hate speech in Twitter and offline racially and religiously discriminated crimes. Other research has also shown that online hate speech has a strong correlation with significant events such as terror attacks, political votes, etc ([\textcolor{cyan}{Hanes \& Machin, 2013}](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.1038.9462&rep=rep1&type=pdf); [\textcolor{cyan}{Williams \& Burnap, 2015}](https://academic.oup.com/bjc/article/56/2/211/2462519)). A recent example of this was the Christchurch extreme right terror attacker’s post on 8chan. Although there is no direct causal link between online hate speech and offline hate crime, hate speech is still part of the cumulative process for a hate formula from social status, political context and geographical perspective that bring harm to the physical world. 
+The increase of using social media platforms such as Twitter and Facebook as a safe harbor to spread hate contents, and to cyberbully or harrass an individual or a minority group because of their identities such as race, religion, sexual orientation, etc., has promoted social disharmony in which may bring local crime rate to rise. ([\textcolor{cyan}{Williams et al., 2019}](https://academic.oup.com/bjc/article/60/1/93/5537169)) In this research article, a [\textcolor{cyan}{Weka}](https://www.weka.io/) tool was used to develop a machine learning classifier to annotate racism and religion and non-hateful tweets. Besides tweets and crime data, census data such as no qualifications, age, long-term unemployed, and black and minority ethnicity, were considered part of the study. Statistical models were built to study a temporal and spatial association. Random and fixed effects, Poisson regression models, and negative binomial models, which all results show consistent of positive association between hate speech in Twitter and offline racially and religiously discriminated crimes. Other research has also shown that online hate speech has a strong correlation with significant events such as terror attacks, political votes, etc ([\textcolor{cyan}{Hanes \& Machin, 2013}](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.1038.9462&rep=rep1&type=pdf); [\textcolor{cyan}{Williams \& Burnap, 2015}](https://academic.oup.com/bjc/article/56/2/211/2462519)). A recent example of this was the Christchurch extreme right terror attacker’s post on 8chan. Although there is no direct causal link between online hate speech and offline hate crime, hate speech is still part of the cumulative process for a hate formula from social status, political context and geographical perspective that bring harm to the physical world. 
 
 Nowadays, hate speech detection remains a big challenge for artificial intelligence. ([\textcolor{cyan}{Matsaki L., 2018}](https://www.wired.com/story/break-hate-speech-algorithm-try-love/)) Because the definition of hate speech is constantly evolving and often hidden within context, AI can be fooled easily. AI can be fooled by inserting typos, adding extra alphabets, and removing spaces. An example of altered text to evade AI detection would be something like this: “MartiansAreDisgustingAndShouldBeKilled love.” Humans can understand this message but the machine learning algorithms have trouble identifying it. Facebook CEO Mark Zuckerberg testified before congress in 2018 and mentioned he was optimistic that in 10 years AI would be able to identify hate speech more accurate. ([\textcolor{cyan}{Shead S., 2020}](https://www.cnbc.com/2020/11/19/facebook-says-ai-detects-94point7percent-of-hate-speech-removed-from-platform.html#:~:text=Facebook%20announced%20Thursday%20that%20artificial,and%20just%2024%25%20in%202017)) Only 24 percent of hate speech was able to be detected according to Facebook’s chief technology officer, Mike Schroepfer. Billions of users consume the Facebook product and platform, a cutting-edge machine technology to accurately spot hate speech is a must-have, to protect its users from exposure to harmful content. 
 
@@ -88,6 +95,56 @@ To develop and train a hate detection model, we’ll need a dataset with each re
 \newpage
 
 # Data and Methods
+
+There are two sets of data we collect for this study, crime data and tweets data. The date range for these data is from year January 2019 to December 2021. We may extend the data collection a year back if needed for our analysis. 
+
+## Data Collection
+
+Crime Data:
+
+The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NYPD Complaint Data Historic}](https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i)) by using the available API. The read.socrata() function available from the "RSocrata" library was used to send query command through API to the site to get NYC crime data. Below are the variables and its values collected.
+
+- cmplnt_fr_dt   : Date of incident occurred
+- addr_pct_cd    : Precinct of incident occurred
+- ofns_desc      : Offense description
+- pd_desc        : Offense description (more granular)
+- boro_nm        : Borough name
+- susp_age_group : Suspect's age group
+- susp_race      : Suspect's race
+- susp_sex       : Suspect's sex
+- latitude       : Latitude coordinate
+- longitude      : Longitude coordinate
+- vic_age_group  : Victim's age group
+- vic_race       : Victim's race
+- vic_sex        : Victim's sex
+
+Tweets Data:
+
+We applied for an academic research access developer account which has a higher tweets cap and got approved by ([\textcolor{cyan}{Twitter}](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter) for our research purpose to collect tweets data through API as well. The get_all_tweets() function available from "academictwitteR" library was used to query NYC tweets data. From the data return, we select below variables which will be used for model building.
+
+- id                 : Unique identification for each tweet
+- created_at         : Date the tweets created
+- text               : Text written by user              
+- source             : Source used by user to tweet            
+- possibly_sensitive : True/False content is sensitive
+- type               : Type of coordinates              
+- coordinates        : Longitude and latitude coordinates       
+- retweet_count      : Count of retweet     
+- reply_count        : Count of reply to the tweet       
+- like_count         : Count of like to the tweet        
+- quote_count        : Count of retweet with comments       
+- longitude          : Longitude coordinate         
+- latitude           : Latitude coordinate          
+- borough            : Borough name       
+
+## Data Analysis
+
+We’ll use a sentiment analysis approach to annotate tweets into positive, negative, and neutral sentiments. Then, we further classify all negative sentiment tweets into hate and non-hate speech by using either topic modeling or refer to a collection of defined offensive speech. All identified offensive tweets will then be mapped to the crimes reported by using date and coordinates for correlation and time series analysis.
+
+For performance comparison, several well-known classification machine learning models such as random forest, KNN, SVM, will be implemented using the optimized parameters and a deep learning model. Recurrent neural networks (RNN) will also be considered. Below is the architecture of the proposed methodology.
+
+$$\\[0.5in]$$
+![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Proposal\\Architecture of the Proposed Methodology.png")
 
 \newpage
 
@@ -155,6 +212,8 @@ To develop and train a hate detection model, we’ll need a dataset with each re
 23. Training Data for AI, ML with Human Empowered Automation. Cogit. Available online: https://www.cogitotech.com/about-us (accessed on 15 March 2022).
 
 24. The HateMotiv Corpus. Kaggle. Available online: https://www.kaggle.com/datasets/nohaalnazzawi/the-hatemotiv-corpus (accessed on 3 October 2022).
+
+25. NYPD Complaint Data Historic. NYC Open Data. Available online: https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i (accessed on 17 October 2022).
 
 \newpage
 
@@ -386,5 +445,3 @@ data$zipcode <- future_mapply(search_zip2,test2$latitude, test2$longitude)
 
 ```{r}
 ```
-
-

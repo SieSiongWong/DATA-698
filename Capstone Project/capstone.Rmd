@@ -231,14 +231,25 @@ get_bearer()
 # Function to get all tweets from year 2020 to 2022 by borough
 get_tweets <- function(borough) {
   get_tweets <- get_all_tweets(
-    query = "",
+    query = c("#hate crime", "#racist", "#racism", "#Islamophobia", "#Islamophobic", "#sexism",
+            "#disability", "#transgender", "#antisemitism", "#misogyny", "#disabled", "slurs",
+            "violent", "murder", "xenophobic", "nigga", "threat", "punching", "harrass", "assault", 
+            "black babies", "islam", "nazi", "genocide", "fuck", "shit", "discrimination", "bitch", 
+            "verbal abuse", "black babies", "violence", "white genocide", "graffiti", "explosion", 
+            "enslaved", "attack", "bomb", "harrassment", "killing minorities", "monsters", "black man", 
+            "killer", "shot dead", "hijab", "insult", "discriminate", "intimidation", "sexual assault",
+            "black folks", "white supremacist", "homophobic", "burning a LGBT", "hatred", 
+            "muslim", "stabbing", "harrasing", "smashed", "punched", "choked", "knocking", "rape", 
+            "burned to death", "bastard", "stripped", "interracial", "slavery", "bomb", "torture", 
+            "abuse", "fucking", "slaughter", "brutally", "bully", "go back to your"),
     n = 1000000,
     start_tweets = "2019-01-01T10:00:00Z",
     end_tweets = "2021-12-31T10:00:00Z",
     country = "US", 
     place = borough,
     lang = "en",
-    page_n = 500
+    page_n = 500,
+    point_radius = c(-73.989121, 40.702944, 18)
     
   )
   
@@ -276,11 +287,11 @@ extract_cols <- function(tweets, borough) {
 }
 
 # Get historical tweets for each borough
-m_twt_raw <- get_tweets("Manhattan, NY")
-q_twt_raw <- get_tweets("Queens, NY")
-k_twt_raw <- get_tweets("Brooklyn, NY")
-x_twt_raw <- get_tweets("Bronx, NY")
-s_twt_raw <- get_tweets("Staten Island, NY")
+m_twt_raw <- get_tweets("Manhattan")
+q_twt_raw <- get_tweets("Queens")
+k_twt_raw <- get_tweets("Brooklyn")
+x_twt_raw <- get_tweets("Bronx")
+s_twt_raw <- get_tweets("Staten Island")
 
 # Clean tweets data for each borough
 m_twt_clean <- extract_cols(m_twt_raw, "MANHATTAN")
@@ -289,12 +300,20 @@ k_twt_clean <- extract_cols(k_twt_raw, "BROOKLYN")
 x_twt_clean <- extract_cols(x_twt_raw, "BRONX")
 s_twt_clean <- extract_cols(s_twt_raw, "STATEN ISLAND")
 
-# Combine borough data sets
-tweets_data <- rbind(m_twt_clean,q_twt_clean,k_twt_clean,x_twt_clean,s_twt_clean)
-
 # Read data from Github.
-# As it takes time run above codes to collect NYC tweets data and also quota limitation per month to get # tweets data from Twitter, we uploaded the combined data we collect from running above codes to a Github # repo for convenient to read into R at any time.
-tweets_data <- read.csv("https://raw.githubusercontent.com/SieSiongWong/DATA-698/master/Data/all_boroughs_2019_2021.csv", header=TRUE, sep=",")
+# As it takes time run above codes to collect NYC tweets data and also quota limitation per month to get # tweets data from Twitter, we uploaded the each borough data we collect from running above codes to a 
+# Github repo for convenient to read into R at any time.
+
+# Github path
+github <- "https://raw.githubusercontent.com/SieSiongWong/DATA-698/master/Data/"
+m_twt <- read.csv(paste0(github,"manhattan_2019_2021.csv"), header=TRUE, sep=",")
+q_twt <- read.csv(paste0(github,"queens_2019_2021.csv"), header=TRUE, sep=",")
+k_twt <- read.csv(paste0(github,"brooklyn_2019_2021.csv"), header=TRUE, sep=",")
+x_twt <- read.csv(paste0(github,"bronx_2019_2021.csv"), header=TRUE, sep=",")
+s_twt <- read.csv(paste0(github,"staten_island_2019_2021.csv"), header=TRUE, sep=",")
+
+# Combine borough data sets
+tweets_data <- rbind(m_twt,q_twt,k_twt,x_twt,s_twt)
 
 ```
 
@@ -415,7 +434,51 @@ tweets_dtm_new   <- tweets_dtm[row_total> 0, ]
 # Put the document in the format lda package required.
 tweets_dtm_mtx <- as.matrix(tweets_dtm_new)
 
+# Create a LDA model with Gibbs method for 30 topics.
+tweets_LDA <- LDA(tweets_dtm_mtx, 25, method="Gibbs", control = list(seed = 123))
+
+# Top 30 words per topic.
+terms(tweets_LDA, 30)
+
 ```
+
+```{r}
+
+# Per-topic-per-word probabilities.
+tweetsLDA.topicword.prob <- tidy(tweets_LDA, matrix="beta")
+
+# Find the 10 terms that are most common within each topic.
+tweetsLDA.topterms <- tweetsLDA.topicword.prob %>%
+  group_by(topic) %>%
+  top_n(10, beta) %>%
+  ungroup() %>%
+  arrange(topic, -beta)
+
+# Plot per-topic-per-word probabilities for topic #26.
+tweetsLDA.topterms %>%
+  mutate(term = reorder_within(term, beta, topic)) %>%
+  filter(topic==9) %>%
+  ggplot(aes(term, beta, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  coord_flip() +
+  scale_x_reordered()
+
+# Classify the selected topic #26 per document.
+tweetsLDA.class <- data.frame(topics(tweets_LDA))
+tweetsLDA.class <- cbind(tweetsLDA.class, 1:nrow(tweetsLDA.class))
+colnames(tweetsLDA.class)[ncol(tweetsLDA.class)] <-'doc_id'
+tweetsLDA.class <- tweetsLDA.class %>% filter(topics.tweets_LDA.==9)
+
+# Inner join selected classified topic with original dataframe.
+test_data$doc_id <- as.character(tweets_data$X)
+tweetsLDA.class$doc_id <- as.character(tweetsLDA.class$doc_id)
+tweets.final <- inner_join(tweetsLDA.class, test_data)
+head(tweets.final)
+
+write.csv(tweets.final,"C:\\Users\\wongs34\\Downloads\\test3.csv", row.names = FALSE)
+```
+
 
 ```{r}
 
@@ -445,3 +508,5 @@ data$zipcode <- future_mapply(search_zip2,test2$latitude, test2$longitude)
 
 ```{r}
 ```
+
+

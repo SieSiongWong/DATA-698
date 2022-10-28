@@ -342,11 +342,10 @@ hate_crime$cmplnt_fr_dt <- as.Date(hate_crime$cmplnt_fr_dt)
 
 # Remove meaningless characters and symbols in tweets text
 tweets_data$text <- gsub("&amp","", tweets_data$text)
-tweets_data$text <- gsub("(RT)((?:\\b\\w*@\\w+)+)","", tweets_data$text)
-tweets_data$text <- gsub("^RT","", tweets_data$text)
+tweets_data$text <- gsub("<[^>]+>","", tweets_data$text)
+tweets_data$text <- gsub("#\\w+","", tweets_data$text)
 tweets_data$text <- gsub("@\\w+","", tweets_data$text)
 tweets_data$text <- gsub("[[:punct:]]","", tweets_data$text)
-tweets_data$text <- gsub("[[:digit:]]+\\s","", tweets_data$text)
 tweets_data$text <- gsub("http\\w+","", tweets_data$text)
 tweets_data$text <- gsub("[ \t]{2,}"," ", tweets_data$text)
 

@@ -74,7 +74,7 @@ There are two sets of data we collect for this study, crime data and tweets data
 
 Crime Data:
 
-The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NYPD Complaint Data Historic}](https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i)) by using the available API. The read.socrata() function available from the "RSocrata" library was used to send query command through API to the site to get NYC crime data. Below are the variables and its values collected.
+The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NYPD Complaint Data Historic}](https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i)) by using the available API. The read.socrata() function available from the "RSocrata" library was used to send SQL query command through API to the site to get NYC crime data. The return data from the query has about 1.31 millions of crime data. Below are the variables and its values collected.
 
 - cmplnt_fr_dt   : Date of incident occurred
 - addr_pct_cd    : Precinct of incident occurred
@@ -92,7 +92,7 @@ The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NY
 
 Tweets Data:
 
-We applied for an academic research access developer account which has a higher tweets cap and got approved by ([\textcolor{cyan}{Twitter}](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter) for our research purpose to collect tweets data through API as well. The get_all_tweets() function available from "academictwitteR" library was used to query NYC tweets data. From the data return, we select below variables which will be used for model building.
+We applied for an academic research access developer account which has a higher tweets cap and got approved by ([\textcolor{cyan}{Twitter}](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter) for our research purpose to collect tweets data through API as well. The get_all_tweets() function available from "academictwitteR" library was used to query NYC tweets data. In the query, we use hashtags  and keywords that are highly related to hate speech. We have collected about 1.2 million of tweets through API. From the data return, we select below variables which will be used for model building.
 
 - id                 : Unique identification for each tweet
 - created_at         : Date the tweets created
@@ -111,9 +111,7 @@ We applied for an academic research access developer account which has a higher 
 
 ## Data Analysis
 
-We’ll use a sentiment analysis approach to annotate tweets into positive, negative, and neutral sentiments. Then, we further classify all negative sentiment tweets into hate and non-hate speech by using either topic modeling or refer to a collection of defined offensive speech. All identified offensive tweets will then be mapped to the crimes reported by using date and coordinates for correlation and time series analysis.
-
-For performance comparison, several well-known classification machine learning models such as random forest, KNN, SVM, will be implemented using the optimized parameters and a deep learning model. Recurrent neural networks (RNN) will also be considered. Below is the architecture of the proposed methodology.
+We'll use a sentiment analysis approach to annotate tweets into positive, negative, and neutral sentiments, to exclude non-hate tweets. We consider tweets which have negative score are highly related to hate speech. Then, we further classify all negative sentiment tweets into hate and non-hate speech by using either topic modeling or refer to a collection of defined offensive speech. All identified hate tweets will then be mapped to the crimes reported by using date and borough for spatial and temporal analysis. Below is the architecture of the proposed methodology.
 
 $$\\[0.5in]$$
 
@@ -121,7 +119,7 @@ $$\\[0.5in]$$
 
 ## Scope and Limitations
 
-Our scope is to analyze the tweet's text created in the five boroughs of New York City: Manhattan, Brooklyn, Queens, Bronx, and Staten Island. But some tweets may have videos embedded and that's out of our capability to analyze the video's content.
+Our scope is to analyze the tweet's text created in the five boroughs of New York City: Manhattan, Brooklyn, Queens, Bronx, and Staten Island. But some tweets may have videos embedded and that's out of our capability to analyze the video's content. Only 32,224 tweets out of the 1.2 million tweets have geo-coordinates available; thus, we may not be able to fully perform spatial analysis at the zip code level. Another limitation to our study is that a simple binary classification of raw online posts into hate speech or non-hate speech is unlikely to be reliable compared to human moderation. With that being said, some of negative attitude tweets we get from sentiment analysis may not be 100% hate speech but could be expression of unhappiness.  
 
 
 \newpage

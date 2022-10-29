@@ -48,6 +48,7 @@ if(!require('SnowballC')) (install.packages('SnowballC'))
 if(!require('topicmodels')) (install.packages('topicmodels'))
 if(!require('wordcloud')) (install.packages('wordcloud'))
 if(!require('tidytext')) (install.packages('tidytext'))
+if(!require('lubridate')) (install.packages('lubridate'))
 ```
 
 \newpage
@@ -219,7 +220,7 @@ $$\\[0.5in]$$
 
 # Appendix A1. Twitter Data Collection
 
-```{r}
+```{r message=FALSE}
 
 # To run below codes for collecting tweets, first you'll need to create a .Renviron file by running
 # set_bearer(), then store their bearer token in one line in the file like this
@@ -321,7 +322,7 @@ tweets_data <- rbind(m_twt,q_twt,k_twt,x_twt,s_twt)
 
 # Appendix A2. Crime Data Collection
 
-```{r}
+```{r message=FALSE}
 
 # Collect crime data from year 2019 to 2021.
 crime_data <- read.socrata("https://data.cityofnewyork.us/resource/qgea-i56i.json?$select=cmplnt_fr_dt,addr_pct_cd,ofns_desc,pd_desc,susp_age_group,boro_nm,susp_race,susp_sex,latitude,longitude,vic_age_group,vic_race,vic_sex&$where=cmplnt_fr_dt between \'2019\' and \'2022\'")
@@ -332,13 +333,23 @@ crime_data <- read.socrata("https://data.cityofnewyork.us/resource/qgea-i56i.jso
 
 # Appendix B. Data Preprocessing
 
-```{r}
+```{r message=FALSE}
 
 # Filter hate related offensive corresponding description
 hate_crime <- filter(crime_data, grepl('ASSAULT|HARRASSMENT', ofns_desc))
 
 # Convert to date type
 hate_crime$cmplnt_fr_dt <- as.Date(hate_crime$cmplnt_fr_dt)
+
+# Count crime by year, month and borough
+crime_count_boro <- hate_crime %>% 
+  mutate_at(vars(cmplnt_fr_dt), funs(year, week)) %>% 
+  group_by(year, week, boro_nm) %>% 
+  summarise(total = n())
+
+```
+
+```{r message=FALSE}
 
 # Remove meaningless characters and symbols in tweets text
 tweets_data$text <- gsub("&amp","", tweets_data$text)
@@ -349,23 +360,16 @@ tweets_data$text <- gsub("[[:punct:]]","", tweets_data$text)
 tweets_data$text <- gsub("http\\w+","", tweets_data$text)
 tweets_data$text <- gsub("[ \t]{2,}"," ", tweets_data$text)
 
-# Remove all non-ASCII characters 
-tweets_data$text <- iconv(tweets_data$text, "UTF-8", "ASCII", sub="")
+# Get negative emotion score tweets
+tweets_vector <- as.vector(tweets_data$text)
+emotion_score <- get_sentiment(tweets_vector)
+tweets_negative <- cbind(tweets_data, emotion_score) %>% filter(emotion_score < 0)
 
-# Tokenize the text and see frequency of words.
-tweets_data %>% 
-  unnest_tokens(word, text)%>%
-  anti_join(stop_words) %>%
-  count(word, sort=TRUE) 
-
-# We can see that words such as "ny, york, im, brooklyn, manhattan, bronx, nyc, queens, ave, 
-# newyork" not pertaining to hatism topic, so we remove them.
-tweets_data <- tweets_data %>% mutate(text=tolower(text))
-tweets_data$text <- gsub("\\bny\\b|\\byork\\b|\\bim\\b|\\bbrooklyn\\b
-                        |\\bmanhattan\\b|\\bbronx\\b|\\bqueens\\b|\\bnyc\\b
-                        |\\bave\\b|\\bnewyork\\b|\\bstaten\\b|\\bisland\\b
-                        |\\bnewyorkcity\\b|\\bjamaica\\b|\\bflushing\\b",
-                        "", tweets_data$text)
+# Count tweets by year, month and borough
+tweets_count_boro <- tweets_negative %>% 
+  mutate_at(vars(created_at), funs(year, week)) %>% 
+  group_by(year, week, borough) %>% 
+  summarise(total = n())
 
 ```
 
@@ -373,9 +377,18 @@ tweets_data$text <- gsub("\\bny\\b|\\byork\\b|\\bim\\b|\\bbrooklyn\\b
 
 # Appendix C. Data Exploration
 
-```{r}
+```{r message=FALSE}
 
+# Tokenize the text and see frequency of words.
+tweets_negative %>% 
+  unnest_tokens(word, text)%>%
+  anti_join(stop_words) %>%
+  count(word, sort=TRUE) 
 
+# Count tweets which have coordinates by borough
+tweets_negative %>% 
+  group_by(borough) %>% 
+  summarise(total = n(), geo_avail =  sum(coordinates!="NULL"))
 
 
 ```
@@ -384,105 +397,14 @@ tweets_data$text <- gsub("\\bny\\b|\\byork\\b|\\bim\\b|\\bbrooklyn\\b
 
 # Appendix D. Data Preparation
 
-```{r}
+```{r message=FALSE}
 
-# Get negative emotion score tweets
-tweets_vector <- as.vector(tweets_data$text)
-emotion_score <- get_sentiment(tweets_vector)
-tweets_negative <- cbind(tweets_data, emotion_score) %>% filter(emotion_score < 0)
-
-```
-
-```{r}
-
-# Select text and id column
-tweets_corpus <- tweets_negative %>% 
-  select(id, text) %>% 
-  rename(doc_id = id) %>% 
-  mutate(doc_id = as.character(doc_id))
-  
-# Create a corpus
-tweets_corpus <- VCorpus(DataframeSource(tweets_corpus))
-  
-# Remove all punctuation from the corpus
-tweets_corpus  <- tm_map(tweets_corpus, removePunctuation)
-
-# Remove all English stopwords from the corpus.
-tweets_corpus <- tm_map(tweets_corpus, removeWords, stopwords("en"))
-tweets_corpus <- tm_map(tweets_corpus, removeWords, stopwords("SMART"))
-
-# Remove all number from the corpus.
-tweets_corpus <- tm_map(tweets_corpus, removeNumbers)
-
-# Strip extra white spaces in the corpus.
-tweets_corpus <- tm_map(tweets_corpus, stripWhitespace)
-
-# Stem words in the corpus.
-tweets_corpus <- tm_map(tweets_corpus, stemDocument)
-
-# Build a document term matrix.
-tweets_dtm <- DocumentTermMatrix(tweets_corpus)
-
-# Increase memory in order to perform below codes
-memory.limit(size=40000)
-
-# Find the sum of words in each document and remove all docs without words.
-row_total <- apply(tweets_dtm , 1, sum)
-tweets_dtm_new   <- tweets_dtm[row_total> 0, ]
-
-# Put the document in the format lda package required.
-tweets_dtm_mtx <- as.matrix(tweets_dtm_new)
-
-# Create a LDA model with Gibbs method for 30 topics.
-tweets_LDA <- LDA(tweets_dtm_mtx, 25, method="Gibbs", control = list(seed = 123))
-
-# Top 30 words per topic.
-terms(tweets_LDA, 30)
-
-```
-
-```{r}
-
-# Per-topic-per-word probabilities.
-tweetsLDA.topicword.prob <- tidy(tweets_LDA, matrix="beta")
-
-# Find the 10 terms that are most common within each topic.
-tweetsLDA.topterms <- tweetsLDA.topicword.prob %>%
-  group_by(topic) %>%
-  top_n(10, beta) %>%
-  ungroup() %>%
-  arrange(topic, -beta)
-
-# Plot per-topic-per-word probabilities for topic #26.
-tweetsLDA.topterms %>%
-  mutate(term = reorder_within(term, beta, topic)) %>%
-  filter(topic==9) %>%
-  ggplot(aes(term, beta, fill = factor(topic))) +
-  geom_col(show.legend = FALSE) +
-  facet_wrap(~ topic, scales = "free") +
-  coord_flip() +
-  scale_x_reordered()
-
-# Classify the selected topic #26 per document.
-tweetsLDA.class <- data.frame(topics(tweets_LDA))
-tweetsLDA.class <- cbind(tweetsLDA.class, 1:nrow(tweetsLDA.class))
-colnames(tweetsLDA.class)[ncol(tweetsLDA.class)] <-'doc_id'
-tweetsLDA.class <- tweetsLDA.class %>% filter(topics.tweets_LDA.==9)
-
-# Inner join selected classified topic with original dataframe.
-test_data$doc_id <- as.character(tweets_data$X)
-tweetsLDA.class$doc_id <- as.character(tweetsLDA.class$doc_id)
-tweets.final <- inner_join(tweetsLDA.class, test_data)
-head(tweets.final)
-
-write.csv(tweets.final,"C:\\Users\\wongs34\\Downloads\\test3.csv", row.names = FALSE)
-```
-
-
-```{r}
+# Filter rows have geo coordinates
+tweets_negative_zip <- tweets_negative %>% 
+  filter(coordinates!="NULL")
 
 # Function to get zip code from latitude and longitude
-search_zip2 <- function(latitude, longitude) {
+search_zip <- function(latitude, longitude) {
     
   return(if(is.na(latitude) | is.na(longitude)){''} 
          else {search_radius(latitude, longitude, radius = 0.7)$zipcode[1]})
@@ -490,7 +412,16 @@ search_zip2 <- function(latitude, longitude) {
 }
 
 # Use parallel processing method to run the function to get zip code
-data$zipcode <- future_mapply(search_zip2,test2$latitude, test2$longitude)
+tweets_negative_zip$zipcode <- future_mapply(search_zip, 
+                                             tweets_negative_zip$latitude, 
+                                             tweets_negative_zip$longitude)
+
+# Count tweets by year, month and zipcode
+tweets_count_zip <- tweets_negative_zip %>% 
+  mutate_at(vars(created_at), funs(year, week)) %>% 
+  group_by(year, week, zipcode) %>% 
+  summarise(total = n())
+
 
 ```
 

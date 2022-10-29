@@ -111,11 +111,11 @@ We applied for an academic research access developer account which has a higher 
 
 ## Data Analysis
 
-We'll use a sentiment analysis approach to annotate tweets into positive, negative, and neutral sentiments, to exclude non-hate tweets. We consider tweets which have negative score are highly related to hate speech. Then, we further classify all negative sentiment tweets into hate and non-hate speech by using either topic modeling or refer to a collection of defined offensive speech. All identified hate tweets will then be mapped to the crimes reported by using date and borough for spatial and temporal analysis. Below is the architecture of the proposed methodology.
+We'll use a sentiment analysis approach to annotate tweets into positive, negative, and neutral sentiments, to exclude non-hate tweets. We consider tweets which have negative score are highly related to hate speech. All identified hate tweets will then be mapped to the crimes reported by using date and borough for spatial and temporal analysis. Below is the architecture of the proposed methodology.
 
 $$\\[0.5in]$$
 
-![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Proposal\\Architecture of the Proposed Methodology.png")
+![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\\Mid-Term\\Architecture of the Proposed Methodology.png")
 
 ## Scope and Limitations
 

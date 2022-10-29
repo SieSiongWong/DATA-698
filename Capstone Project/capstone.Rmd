@@ -49,6 +49,8 @@ if(!require('topicmodels')) (install.packages('topicmodels'))
 if(!require('wordcloud')) (install.packages('wordcloud'))
 if(!require('tidytext')) (install.packages('tidytext'))
 if(!require('lubridate')) (install.packages('lubridate'))
+if(!require('zoo')) (install.packages('zoo'))
+if(!require('ggplot2')) (install.packages('ggplot2'))
 ```
 
 \newpage
@@ -95,15 +97,15 @@ To develop and train a hate detection model, we’ll need a dataset with each re
 
 \newpage
 
-# Data and Methods
+# Methodology
 
-There are two sets of data we collect for this study, crime data and tweets data. The date range for these data is from year January 2019 to December 2021. We may extend the data collection a year back if needed for our analysis. 
+There are two sets of data we collect for this study, crime data and tweets data. The date range for these data is from year January 2019 to December 2021. We may extend the data collection a year back if needed for our analysis.
 
 ## Data Collection
 
 Crime Data:
 
-The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NYPD Complaint Data Historic}](https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i)) by using the available API. The read.socrata() function available from the "RSocrata" library was used to send query command through API to the site to get NYC crime data. Below are the variables and its values collected.
+The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NYPD Complaint Data Historic}](https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i)) by using the available API. The read.socrata() function available from the "RSocrata" library was used to send SQL query command through API to the site to get NYC crime data. The return data from the query has about 1.31 millions of crime data. Below are the variables and its values collected.
 
 - cmplnt_fr_dt   : Date of incident occurred
 - addr_pct_cd    : Precinct of incident occurred
@@ -121,7 +123,7 @@ The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NY
 
 Tweets Data:
 
-We applied for an academic research access developer account which has a higher tweets cap and got approved by ([\textcolor{cyan}{Twitter}](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter) for our research purpose to collect tweets data through API as well. The get_all_tweets() function available from "academictwitteR" library was used to query NYC tweets data. From the data return, we select below variables which will be used for model building.
+We applied for an academic research access developer account which has a higher tweets cap and got approved by ([\textcolor{cyan}{Twitter}](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter) for our research purpose to collect tweets data through API as well. The get_all_tweets() function available from "academictwitteR" library was used to query NYC tweets data. In the query, we use hashtags  and keywords that are highly related to hate speech. We have collected about 1.2 million of tweets through API. From the data return, we select below variables which will be used for model building.
 
 - id                 : Unique identification for each tweet
 - created_at         : Date the tweets created
@@ -140,12 +142,14 @@ We applied for an academic research access developer account which has a higher 
 
 ## Data Analysis
 
-We’ll use a sentiment analysis approach to annotate tweets into positive, negative, and neutral sentiments. Then, we further classify all negative sentiment tweets into hate and non-hate speech by using either topic modeling or refer to a collection of defined offensive speech. All identified offensive tweets will then be mapped to the crimes reported by using date and coordinates for correlation and time series analysis.
-
-For performance comparison, several well-known classification machine learning models such as random forest, KNN, SVM, will be implemented using the optimized parameters and a deep learning model. Recurrent neural networks (RNN) will also be considered. Below is the architecture of the proposed methodology.
+We'll use a sentiment analysis approach to annotate tweets into positive, negative, and neutral sentiments, to exclude non-hate tweets. We consider tweets which have negative score are highly related to hate speech. All identified hate tweets will then be mapped to the crimes reported by using date and borough for spatial and temporal analysis. Below is the architecture of the proposed methodology.
 
 $$\\[0.5in]$$
-![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Proposal\\Architecture of the Proposed Methodology.png")
+![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\\Mid-Term\\Architecture of the Proposed Methodology.png")
+
+## Scope and Limitations
+
+Our scope is to analyze the tweet's text created in the five boroughs of New York City: Manhattan, Brooklyn, Queens, Bronx, and Staten Island. But some tweets may have videos embedded and that's out of our capability to analyze the video's content. Only 32,224 tweets out of the 1.2 million tweets have geo-coordinates available; thus, we may not be able to fully perform spatial analysis at the zip code level. Another limitation to our study is that a simple binary classification of raw online posts into hate speech or non-hate speech is unlikely to be reliable compared to human moderation. With that being said, some of negative attitude tweets we get from sentiment analysis may not be 100% hate speech but could be expression of unhappiness.  
 
 \newpage
 
@@ -343,8 +347,8 @@ hate_crime$cmplnt_fr_dt <- as.Date(hate_crime$cmplnt_fr_dt)
 
 # Count crime by year, month and borough
 crime_count_boro <- hate_crime %>% 
-  mutate_at(vars(cmplnt_fr_dt), funs(year, week)) %>% 
-  group_by(year, week, boro_nm) %>% 
+  mutate_at(vars(cmplnt_fr_dt), funs(year, month)) %>% 
+  group_by(year, month, boro_nm) %>% 
   summarise(total = n())
 
 ```
@@ -367,8 +371,8 @@ tweets_negative <- cbind(tweets_data, emotion_score) %>% filter(emotion_score < 
 
 # Count tweets by year, month and borough
 tweets_count_boro <- tweets_negative %>% 
-  mutate_at(vars(created_at), funs(year, week)) %>% 
-  group_by(year, week, borough) %>% 
+  mutate_at(vars(created_at), funs(year, month)) %>% 
+  group_by(year, month, borough) %>% 
   summarise(total = n())
 
 ```
@@ -379,17 +383,67 @@ tweets_count_boro <- tweets_negative %>%
 
 ```{r message=FALSE}
 
-# Tokenize the text and see frequency of words.
-tweets_negative %>% 
+# Tokenize the text and see frequency of words greater than 
+top_words <- tweets_negative %>% 
   unnest_tokens(word, text)%>%
   anti_join(stop_words) %>%
-  count(word, sort=TRUE) 
+  count(word, sort=TRUE) %>% 
+  filter(n>15000)
+
+# Visualization of top words within the complete tweets data.
+theme_set(theme_classic())
+options(scipen = 999)
+
+ggplot(top_words, aes(x=reorder(word,n), y=n))+
+  geom_bar(stat="identity", width = 0.5, fill="tomato2")+
+  xlab("Terms") + ylab("Count") + coord_flip() +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6, size=7))
 
 # Count tweets which have coordinates by borough
 tweets_negative %>% 
   group_by(borough) %>% 
   summarise(total = n(), geo_avail =  sum(coordinates!="NULL"))
 
+# Select text and id column
+tweets_corpus <- tweets_negative %>% 
+  select(X, text) %>% 
+  rename(doc_id = X) %>% 
+  mutate(doc_id = as.character(doc_id))
+  
+# Create a corpus
+tweets_corpus <- VCorpus(DataframeSource(tweets_corpus))
+  
+# Remove all punctuation from the corpus
+tweets_corpus  <- tm_map(tweets_corpus, removePunctuation)
+
+# Remove all English stopwords from the corpus.
+tweets_corpus <- tm_map(tweets_corpus, removeWords, stopwords("en"))
+tweets_corpus <- tm_map(tweets_corpus, removeWords, stopwords("SMART"))
+
+# Remove all number from the corpus.
+tweets_corpus <- tm_map(tweets_corpus, removeNumbers)
+
+# Strip extra white spaces in the corpus.
+tweets_corpus <- tm_map(tweets_corpus, stripWhitespace)
+
+# Stem words in the corpus.
+tweets_corpus <- tm_map(tweets_corpus, stemDocument)
+
+# Visualize word cloud
+wordcloud(tweets_corpus, max.words = 100, random.order = FALSE, rot.per = 0.15, min.freq = 5, colors = brewer.pal(8, "Dark2"))
+
+# Visualize total count of crimes and hate tweets
+tweets_count_boro$yr_mth <- as.yearmon(with(tweets_count_boro, sprintf("%d-%02d", year, month)))
+crime_count_boro$yr_mth <- as.yearmon(with(crime_count_boro, sprintf("%d-%02d", year, month)))
+tweets_count_boro$name <- "tweets"
+crime_count_boro$name <- "crime"
+rbind(tweets_count_boro, crime_count_boro) %>% 
+  ggplot(aes(x=yr_mth, y=total, fill=name))+
+  geom_bar(position="dodge", stat="identity")+
+  xlab("Date") + ylab("Count") + 
+  theme(axis.text.x = element_text(angle=45, vjust=0.6, size=7)) + 
+  theme(legend.title=element_blank(), legend.position="top")
+  
 
 ```
 
@@ -438,5 +492,3 @@ tweets_count_zip <- tweets_negative_zip %>%
 
 ```{r}
 ```
-
-

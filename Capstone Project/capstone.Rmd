@@ -67,9 +67,9 @@ Some may argue that the First Amendment allows individuals to express anything t
 
 We believe that offensive speech has a high potential for causing more violent crimes to happen in the city. To make our city a better place to live, we need to find a way not only to identify inappropriate speech in social media platforms and reduce the spread of such speech, but also when to deploy more law enforcement to patrol areas crowded with high numbers of offensive speech in the hope we interrupt crime prematurely. Our research hypothesis is that higher offensive tweets from an area have strong correlation to the number of crimes committed in that area and minority groups are mostly the target. 
 
-The challenging part for our research is to classify the tweets metadata into offensive speech. Defining what is offensive speech such as hate speech can be hard because it’s constantly evolving and often dependent on context. Until today, artificial intelligence still struggles when it comes to identifying hate speech. But we’ve found that quite a few research scientists have tried different approaches to identifying offensive speech in social media text data. The more advanced techniques, deep learning methods such as gated recurrent unit (GRU), convolutional neural networks (CNN), gated convolutional recurrent - neural networks (GCR-NN), and combination of transfer learning and week supervision, are so far giving the best results compared to conventional classification approaches such as logistic regression, naive Bayes, decision tree, random forest, and gradient boosting.
+The challenging part for our research is to classify the tweets data into hate speech. Defining what is hate speech can be hard because it’s constantly evolving and often dependent on context. Until today, artificial intelligence still struggles when it comes to identifying hate speech. But we have found that quite a few research scientists have tried different approaches to identifying offensive speech in social media text data. The more advanced techniques, deep learning methods such as gated recurrent unit (GRU), convolutional neural networks (CNN), gated convolutional recurrent - neural networks (GCR-NN), and combination of transfer learning and week supervision, are so far giving the best results compared to conventional classification approaches such as logistic regression, naive Bayes, decision tree, random forest, and gradient boosting.
 
-There are many different types of hate speech that target different groups and individuals, and research has been done to differentiate and define them accordingly. Some approaches to the classification of hate speech from Tweeter use the hashtag as a variable for predicting violence and hate message from the tweet. While other approaches for classification of hate speech on social media may also include the development of neural language models. Additionally, there are algorithms that have been created to detect hate speech in digital microenvironments, which facilitate and reduce analysis tasks undergone by law enforcement agencies and service providers. We have also come across research that found there may not be a correlation between social media messages and crime, and others that consider “weather” to be an important environmental factor that affects the occurrence of criminal incidents. There have been many different approaches tried to find a link between social media posts and crime, all with varying results, and what makes this research so interesting is that we may yet find different results that may contribute to this solution.
+There are many different types of hate speech that target different groups and individuals, and research has been done to differentiate and define them accordingly. Some approaches to the classification of hate speech from Twitter use the hashtag as a variable for predicting violence and hateful message from tweets. While other approaches for classification of hate speech on social media may also include the development of neural language models. Additionally, there are algorithms that have been created to detect hate speech in digital micro-environments, which facilitate and reduce analysis tasks undergone by law enforcement agencies and service providers. We have also come across research that found there may not be a correlation between social media messages and crime, and others that consider “weather” to be an important environmental factor that affects the occurrence of criminal incidents. There have been many different approaches tried to find a link between social media posts and crime, all with varying results, and what makes this research so interesting is that we may yet find different results that may contribute to this solution.
 
 \newpage
 
@@ -99,13 +99,13 @@ To develop and train a hate detection model, we’ll need a dataset with each re
 
 # Methodology
 
-There are two sets of data we collect for this study, crime data and tweets data. The date range for these data is from year January 2019 to December 2021. We may extend the data collection a year back if needed for our analysis.
+There are two sets of data we collect for this study, crime data and tweets data. The date range for these data is from January 2019 to December 2021. We may extend the data collection a year back if needed for our analysis. 
 
 ## Data Collection
 
 Crime Data:
 
-The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NYPD Complaint Data Historic}](https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i)) by using the available API. The read.socrata() function available from the "RSocrata" library was used to send SQL query command through API to the site to get NYC crime data. The return data from the query has about 1.31 millions of crime data. Below are the variables and its values collected.
+The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NYPD Complaint Data Historic}](https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i)) by using the available API. The read.socrata() function available from the "RSocrata" library was used to send SQL query command through the API to get NYC crime data. The return data from the query has about 1.31 million rows of crime data. Below are the variables and their values from the data collected.
 
 - cmplnt_fr_dt   : Date of incident occurred
 - addr_pct_cd    : Precinct of incident occurred
@@ -123,33 +123,34 @@ The crime data was collected from the NYC Open Data source ([\textcolor{cyan}{NY
 
 Tweets Data:
 
-We applied for an academic research access developer account which has a higher tweets cap and got approved by ([\textcolor{cyan}{Twitter}](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter) for our research purpose to collect tweets data through API as well. The get_all_tweets() function available from "academictwitteR" library was used to query NYC tweets data. In the query, we use hashtags  and keywords that are highly related to hate speech. We have collected about 1.2 million of tweets through API. From the data return, we select below variables which will be used for model building.
+We applied for an academic research access developer account which has a higher tweets cap and got approved by [\textcolor{cyan}{Twitter}](https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter) for our research purpose to collect tweets data through API as well. The get_all_tweets() function available from "academictwitteR" library was used to query NYC tweets data. In the query, we use hashtags and keywords that are highly related to hate speech. We have collected about 1.2 million of tweets through API. From the data return, we select below variables, which will be used for model building.
 
 - id                 : Unique identification for each tweet
 - created_at         : Date the tweets created
-- text               : Text written by user              
-- source             : Source used by user to tweet            
+- text               : Text written by user
+- source             : Source used by user to tweet
 - possibly_sensitive : True/False content is sensitive
-- type               : Type of coordinates              
-- coordinates        : Longitude and latitude coordinates       
-- retweet_count      : Count of retweet     
-- reply_count        : Count of reply to the tweet       
-- like_count         : Count of like to the tweet        
-- quote_count        : Count of retweet with comments       
-- longitude          : Longitude coordinate         
-- latitude           : Latitude coordinate          
+- type               : Type of coordinates
+- coordinates        : Longitude and latitude coordinates
+- retweet_count      : Count of retweet
+- reply_count        : Count of reply to the tweet
+- like_count         : Count of like to the tweet
+- quote_count        : Count of retweet with comments
+- longitude          : Longitude coordinate
+- latitude           : Latitude coordinate
 - borough            : Borough name       
 
 ## Data Analysis
 
-We'll use a sentiment analysis approach to annotate tweets into positive, negative, and neutral sentiments, to exclude non-hate tweets. We consider tweets which have negative score are highly related to hate speech. All identified hate tweets will then be mapped to the crimes reported by using date and borough for spatial and temporal analysis. Below is the architecture of the proposed methodology.
+We will use a sentiment analysis approach to annotate tweets into positive (score>0), negative (score<0), and neutral (score=0) sentiments, in order to exclude non-hate related tweets. Following this approach we considered that tweets that have negative scores are more likely to be related to hate speech. Classification methods such as logistic regression, Naive Bayes, KNN, and SVM, will be used to develop hate speech detection models along with a human-labeled twitter hate speech dataset taken from [\textcolor{cyan}{Surge}](https://www.surgehq.ai/datasets/hate-speech-dataset) website. The best model will be selected to label hate and non-hate for all "negative" attitude identified tweets. All hate labeled tweets will then be joined to the crimes reported data by using date and borough for a spatial and temporal analysis. Both crime and hateful tweets count will be normalized using each place's population. A widely used regional statistics method, spatio-temporal Bayesian modeling, will be used to analyze spatio-temporal patterns, determine any developing trends, and test our hypothesis. Below is the architecture of the proposed methodology.
 
 $$\\[0.5in]$$
+
 ![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\\Mid-Term\\Architecture of the Proposed Methodology.png")
 
 ## Scope and Limitations
 
-Our scope is to analyze the tweet's text created in the five boroughs of New York City: Manhattan, Brooklyn, Queens, Bronx, and Staten Island. But some tweets may have videos embedded and that's out of our capability to analyze the video's content. Only 32,224 tweets out of the 1.2 million tweets have geo-coordinates available; thus, we may not be able to fully perform spatial analysis at the zip code level. Another limitation to our study is that a simple binary classification of raw online posts into hate speech or non-hate speech is unlikely to be reliable compared to human moderation. With that being said, some of negative attitude tweets we get from sentiment analysis may not be 100% hate speech but could be expression of unhappiness.  
+Our scope is to analyze the tweet's data created in the five boroughs of New York City: Manhattan, Brooklyn, Queens, Bronx, and Staten Island. Some tweets may have videos embedded and that would be out of our capability to analyze the video's content. Only 32,224 tweets out of the 1.2 million tweets have geographic coordinates available; thus, we may not be able to fully perform spatial analysis at the zip code level. Another limitation to our study is that a trained binary classification model for labeling hundreds of thousands of negative attitude tweets into hateful or non-hateful tweets is unlikely to be 100% reliable compared to human moderation. With that being said, some of the hate labeled tweets could simply be expression of unhappiness, disagreement, sadness, disappointment, etc. 
 
 \newpage
 
@@ -219,6 +220,10 @@ Our scope is to analyze the tweet's text created in the five boroughs of New Yor
 24. The HateMotiv Corpus. Kaggle. Available online: https://www.kaggle.com/datasets/nohaalnazzawi/the-hatemotiv-corpus (accessed on 3 October 2022).
 
 25. NYPD Complaint Data Historic. NYC Open Data. Available online: https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i (accessed on 17 October 2022).
+
+26. Hate Speech Dataset. Surge. Available online: https://www.surgehq.ai/datasets/hate-speech-dataset (accessed on 30 October 2022).
+
+27. 2020 Census Data. NYC Planning. Available online: https://www.nyc.gov/site/planning/planning-level/nyc-population/2020-census.page##2020-census-results (accessed on 29 October 2022).
 
 \newpage
 

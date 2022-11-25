@@ -161,21 +161,55 @@ $$\\[0.5in]$$
 
 ![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\\Mid-Term\\Architecture of the Proposed Methodology.png")
 
+
+## Model
+
+In this study, we will develop two spatio-temporal Bayesian models. One obeys a Poisson distribution and another obeys Binomial distribution as below.
+
+$${Y}_{ij} &\sim Binomial(n_{ij},p_{ij})$$,                                           (1)
+
+where $${Y}_{ij}$$ is the observed number of hate crime. $$n_{ij}$$ is the population of potential hate crime occurred at i-th location in the j-th period of time. $$p_{ij}$$ is the hate crime rate occurred at i-th location in the j-th period of time. By taking into the spatial and spatial-temporal correlation into account, model 1 above can be written as follows:
+
+$$logit(p_{ij}) = \alpha + \beta X_{i} + u_{i} + s_{i} + \gamma t_{j} + \sigma_{i} t_{j}$$, (2)
+
+where $$logit(p_{ij})$$ is the logit connectivity function for the hate crime rate. The spatio-temporal Bayesian model based on Poisson distribution is as below.
+
+$${Y}_{ij} &\sim Poisson(E_{ij}\theta_{ij})$$,                                        (3)
+
+where $$E_{ij}$$ is the expected number of hate crime occurred at i-th location in the j-th period of time. $$\theta_{ij}$$ is the relative risk of i-th location in the j-th period of time. Model 3 above can be written as follows:
+
+$$log(\theta_{ij}) = \alpha + \beta X_{i} + u_{i} + s_{i} + \gamma t_{j} + \sigma_{i} t_{j}$$, (4)
+
+The terms which are used in both model 2 and 4 are explained here. $$\alpha$$ is the intercept, $$\beta$$ is the coefficient of covariate X at i-th location. $$\beta X_{i}$$ is the fixed effect of the model. $$ u_{i} + s_{i}$$ is the area random effect. $$\gamma t_{j}$$ represents the purely temporal term, and $$\gamma$$ is the global linear trend effect. $$\sigma_{i} t_{j}$$ represents the spatio-temporal interaction term.
+
+Popular metrics such as DIC (*deviance information criterion*), CPO (*conditional predictive ordinate*), and WAIC (*Watanabe–Akaike information criterion*), will be used as a performance measurement to compare and measure how good a model is.
+
 ## Scope and Limitations
 
-Our scope is to analyze the tweet's data created in the five boroughs of New York City: Manhattan, Brooklyn, Queens, Bronx, and Staten Island. Some tweets may have videos embedded and that would be out of our capability to analyze the video's content. Only 32,224 tweets out of the 1.2 million tweets have geographic coordinates available; thus, we may not be able to fully perform spatial analysis at the zip code level. Another limitation to our study is that a trained binary classification model for labeling hundreds of thousands of negative attitude tweets into hateful or non-hateful tweets is unlikely to be 100% reliable compared to human moderation. With that being said, some of the hate labeled tweets could simply be expression of unhappiness, disagreement, sadness, disappointment, etc. 
+Our scope is to analyze the tweet's data created in the five boroughs of New York City: Manhattan, Brooklyn, Queens, Bronx, and Staten Island. Some tweets may have videos embedded and that would be out of our capability to analyze the video's content. Socio-economic factors such as unemployment rate, income, education, etc., which may correlate with hate crime, are not considered in this study. 
+
+32,224 tweets out of the 1.2 million tweets have geographic coordinates available; thus, we may not be able to fully perform spatial analysis at the zip code level. Another limitation to our study is that a trained binary classification model for labeling hundreds of thousands of negative attitude tweets into hateful or non-hateful tweets is unlikely to be 100% reliable compared to human moderation. With that being said, some of the hate labeled tweets could simply be expression of unhappiness, disagreement, sadness, disappointment, etc. 
 
 \newpage
 
 # Results
 
+
+
+
 \newpage
 
 # Discussion
 
+
+
+
 \newpage
 
 # Conclusion
+
+
+
 
 \newpage
 
@@ -240,11 +274,13 @@ Our scope is to analyze the tweet's data created in the five boroughs of New Yor
 
 28. Moraga P. (2019, November 25). *Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny*. Chapman & Hall/CRC Biostatistics Series.  Retrieved from https://www.paulamoraga.com/book-geospatial/sec-arealdataexamplest.html#model-2
 
+29. NYCdata. Baruch College. Available online: https://www.baruch.cuny.edu/nycdata/population-geography/age_distribution.htm
+
 \newpage
 
 # Appendix A1. Twitter Data Collection
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 
 # To run below codes for collecting tweets, first you'll need to create a .Renviron file by running
 # set_bearer(), then store their bearer token in one line in the file like this
@@ -346,7 +382,7 @@ tweets_data <- rbind(m_twt,q_twt,k_twt,x_twt,s_twt)
 
 # Appendix A2. Crime Data Collection
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 
 # Collect crime data from year 2019 to 2021.
 crime_data <- read.socrata("https://data.cityofnewyork.us/resource/qgea-i56i.json?$select=cmplnt_fr_dt,addr_pct_cd,ofns_desc,pd_desc,susp_age_group,boro_nm,susp_race,susp_sex,latitude,longitude,vic_age_group,vic_race,vic_sex&$where=cmplnt_fr_dt between \'2019\' and \'2022\'")
@@ -357,7 +393,7 @@ crime_data <- read.socrata("https://data.cityofnewyork.us/resource/qgea-i56i.jso
 
 # Appendix B. Data Preprocessing
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 
 # Drop row which borough is NA
 crime_data <- crime_data %>% drop_na(boro_nm)
@@ -386,7 +422,7 @@ crime_count_boro <- merge(hate_crime_count_boro, total_crime_count_boro, by = c(
 
 ```
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 
 # Remove meaningless characters and symbols in tweets text
 tweets_data$text <- gsub("&amp","", tweets_data$text)
@@ -466,7 +502,7 @@ tweets_corpus <- tm_map(tweets_corpus, stemDocument)
 # Visualize word cloud
 wordcloud(tweets_corpus, max.words = 100, random.order = FALSE, rot.per = 0.15, min.freq = 5, colors = brewer.pal(8, "Dark2"))
 
-# 5 boroughs race  population
+# 5 boroughs race population
 boro_race_pop <- data.frame(boro_nm = c('BROOKLYN','MANHATTAN','QUEENS','BRONX','STATEN ISLAND'),
                             HISPANIC = c(516426, 402640, 667861, 806463, 96960),
                             WHITE = c(968427, 793294, 549358, 130796, 277981),
@@ -476,11 +512,17 @@ boro_race_pop <- data.frame(boro_nm = c('BROOKLYN','MANHATTAN','QUEENS','BRONX',
                                       3900+11318)) %>% 
   gather(vic_race,total_pop,HISPANIC:OTHER, factor_key=TRUE)
 
+# 5 boroughs sex population
+boro_sex_pop <- data.frame(boro_nm = c('BROOKLYN','MANHATTAN','QUEENS','BRONX','STATEN ISLAND'),
+                            F = c(1346912, 857428, 1159829, 748852, 244706),
+                            M = c(1212991, 771278, 1094029, 669355, 231437)) %>% 
+  gather(vic_sex,total_pop,F:M, factor_key=TRUE)
+
 # Visualize total count of crimes and hate tweets
 tweets_count_boro$yr_mth <- as.yearmon(with(tweets_count_boro, sprintf("%d-%02d", year, month)))
 crime_count_boro$yr_mth <- as.yearmon(with(crime_count_boro, sprintf("%d-%02d", year, month)))
-tweets_count_boro$name <- "tweets"
-crime_count_boro$name <- "crime"
+tweets_count_boro$name <- "Negative Attitude Tweets"
+crime_count_boro$name <- "Hate Crime"
 rbind(tweets_count_boro, crime_count_boro) %>% 
   ggplot(aes(x=yr_mth, y=total, fill=name))+
   geom_bar(position="dodge", stat="identity")+
@@ -490,7 +532,7 @@ rbind(tweets_count_boro, crime_count_boro) %>%
         legend.position="bottom", 
         axis.title.x=element_blank(),
         plot.title = element_text(hjust = 0.5)) + 
-  ggtitle("Monthly Total Count from 2019 - 2021")
+  ggtitle("Monthly Total Count of Hate Crime and Negative Attitude Tweets (2019 - 2021)")
 
 # Visualize total count of victim race for each borough between year 2019 and 2021 
 hate_crime %>% 
@@ -506,7 +548,7 @@ hate_crime %>%
   gather(vic_race,total, HISPANIC:OTHER, factor_key=TRUE) %>% 
   left_join(., boro_race_pop, by=c('boro_nm', 'vic_race')) %>% 
   mutate(total=  total/total_pop*100000) %>% 
-  ggplot(aes(x = boro_nm, y = total, fill = reorder(vic_race, -total))) + 
+  ggplot(aes(x = reorder(boro_nm, -total), y = total, fill = reorder(vic_race, -total))) + 
   geom_col(position = position_dodge2(reverse = TRUE)) + 
   theme(legend.title=element_blank(), 
         legend.position="bottom", 
@@ -516,15 +558,21 @@ hate_crime %>%
   ylab("Total Hate Crime Per 100,000 Population")
 
 # Visualize total count of victim sex for each borough between year 2019 and 2021 
-hate_crime %>% group_by(boro_nm, vic_sex) %>% summarise(total=n()) %>% 
-  ggplot(aes(x = boro_nm, y = total, fill = reorder(vic_sex, -total))) + 
+hate_crime %>% 
+  group_by(boro_nm, vic_sex) %>% 
+  filter(!any(is.na(vic_sex))) %>% 
+  summarise(total=n()) %>% 
+  filter(vic_sex=='F' | vic_sex=='M') %>% 
+  left_join(., boro_sex_pop, by=c('boro_nm', 'vic_sex')) %>% 
+  mutate(total=  total/total_pop*100000) %>% 
+  ggplot(aes(x = reorder(boro_nm, -total), y = total, fill = reorder(vic_sex, -total))) + 
   geom_col(position = position_dodge2(reverse = TRUE)) + 
   theme(legend.title=element_blank(), 
         legend.position="bottom", 
         axis.title.x=element_blank(), 
         plot.title = element_text(hjust = 0.5)) + 
   ggtitle("Total Hate Crime Victim By Sex Across Each Borough (2019 - 2021)") + 
-  ylab("Count")
+  ylab("Total Hate Crime Per 100,000 Population")
 
 # Visualize total count of victim age group for each borough between year 2019 and 2021 
 hate_crime %>% group_by(boro_nm, vic_age_group) %>% summarise(total=n()) %>% 
@@ -575,15 +623,15 @@ crime_tweets_combine_boro <- crime_tweets_combine_yr %>%
             total_hate_tweets = sum(total_hate_tweets))
 
 # Convert to long form to plot
-crime_tweets_combine_boro <- gather(crime_tweets_combine_boro, condition, total, total_crime, total_hate_crime, total_hate_tweets, factor_key=TRUE)
-
-ggplot(crime_tweets_combine_boro, aes(x = boro_nm, y = total, fill = condition)) + 
+crime_tweets_combine_boro %>% gather(condition, total, total_crime, total_hate_crime, total_hate_tweets, factor_key=TRUE) %>% 
+  filter(condition == 'total_hate_crime' | condition == 'total_hate_tweets') %>%
+  ggplot(aes(x = boro_nm, y = total, fill = condition)) + 
   geom_col(position = position_dodge2(reverse = TRUE)) + 
   theme(legend.title=element_blank(), 
         legend.position="bottom", 
         axis.title.x=element_blank(), 
         plot.title = element_text(hjust = 0.5)) + 
-  ggtitle("Total Count for Each Borough (2019 - 2021)") + 
+  ggtitle("Total Count of Hate Crime and Hateful Tweets for Each Borough (2019 - 2021)") + 
   ylab("Total Count Per 100,000 Population")
 
 
@@ -607,17 +655,23 @@ data <- df %>%
   bi_class(x = total_hate_crime, y = total_hate_tweets, style = "quantile", dim = 3)
 
 map <- ggplot() + 
-  geom_sf(data = data, mapping = aes(fill = bi_class), color = "white", size = 0.1, show.legend = FALSE) +
+  geom_sf(data = data, 
+          mapping = aes(fill = bi_class), 
+          color = "white", 
+          size = 0.1, 
+          show.legend = FALSE) +
   bi_scale_fill(pal = "GrPink", dim = 3) +
   labs(
-    subtitle = paste0(year, " Hate Crime & Hate Tweets in NYC"),
-  ) + 
-  bi_theme()
+    subtitle = paste0(year, " Hate Crime & Hateful Tweets in NYC")) + 
+  bi_theme()  + 
+  theme(plot.subtitle=element_text(size=18, 
+                                   hjust=0.5, 
+                                   color="black"))
 
 legend <- bi_legend(pal = "GrPink",
                     dim = 3,
                     xlab = "Higher Hate Crime",
-                    ylab = "Higher Hate Tweets",
+                    ylab = "Higher Hateful Tweets",
                     size = 8)
 
 final_plot <- ggdraw() +
@@ -649,6 +703,7 @@ nb2INLA("map.adj", nb)
 g <- inla.read.graph(filename = "map.adj")
 
 # Create the index vector for the boroughs and date used for specifying the random effects
+# Index vector of area is required for the two random effects
 d <- crime_tweets_combine_mth
 d$idarea <- as.numeric(as.factor(d$boro_nm))
 d$yr_mth <- as.yearmon(with(d, sprintf("%d-%02d", year, month)))
@@ -759,8 +814,14 @@ annotate_figure(ggarrange(marginal_tw_p_plot + rremove("x.title"),
 kable(data.frame(Model = c('Binomial distribution model', 'Poisson distribution model'),
                  DIC = c(res_b$dic$dic, res_p$dic$dic),
                  WAIC = c(res_b$waic$waic, res_p$waic$waic), 
-                 CPO = c(sum(log(res_b$cpo$cpo)), sum(log(res_p$cpo$cpo))))) %>% 
-  kable_styling(full_width = T)
+                 CPO = c(sum(log(res_b$cpo$cpo)), sum(log(res_p$cpo$cpo)))), 
+      format="html", 
+      align = "c",
+      table.attr = "style = \"color: black;\"",
+      caption = "<center><b>Table 2: Evaluation of the Models<b></center>") %>% 
+  kable_styling(bootstrap_options = c("bordered", "striped"), full_width = F) %>% 
+  row_spec(row = 0, bold = TRUE)
+
 
 # Merge relative risk value to the dataset
 d$RR_P <- res_p$summary.fitted.values[, "mean"]
@@ -791,9 +852,11 @@ map <- ggplot() +
   geom_sf(data = data, mapping = aes(fill = bi_class), color = "white", size = 0.1, show.legend = FALSE) +
   bi_scale_fill(pal = "GrPink", dim = 3) +
   labs(
-    subtitle = paste0(year, " Hate Crime & Relative Risk by Poisson Distribution in NYC"),
-  ) + 
-  bi_theme()
+    subtitle = paste0(year, " Hate Crime & Relative Risk by Poisson Distribution")) + 
+  bi_theme() + 
+  theme(plot.subtitle=element_text(size=18, 
+                                   hjust=0.5, 
+                                   color="black"))
 
 legend <- bi_legend(pal = "GrPink",
                     dim = 3,
@@ -827,12 +890,17 @@ data <- df %>%
   bi_class(x = total_hate_crime, y = avg_rr_b, style = "quantile", dim = 3)
 
 map <- ggplot() + 
-  geom_sf(data = data, mapping = aes(fill = bi_class), color = "white", size = 0.1, show.legend = FALSE) +
+  geom_sf(data = data, 
+          mapping = aes(fill = bi_class), 
+          color = "white", 
+          size = 0.1, 
+          show.legend = FALSE) +
   bi_scale_fill(pal = "GrPink", dim = 3) +
-  labs(
-    subtitle = paste0(year, " Hate Crime & Relative Risk by Binomial Distribution in NYC"),
-  ) + 
-  bi_theme()
+  labs(subtitle = paste0(year, " Hate Crime & Relative Risk by Binomial Distribution")) + 
+  bi_theme() + 
+  theme(plot.subtitle=element_text(size=18, 
+                                   hjust=0.5, 
+                                   color="black"))
 
 legend <- bi_legend(pal = "GrPink",
                     dim = 3,

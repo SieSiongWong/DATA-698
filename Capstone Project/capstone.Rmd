@@ -61,6 +61,7 @@ if(!require('spdep')) (install.packages('spdep'))
 if(!require('SpatialEpi')) (install.packages('SpatialEpi'))
 if(!require('htmltools')) (install.packages('htmltools'))
 if(!require('kableExtra')) (install.packages('kableExtra'))
+if(!require('knitr')) (install.packages('knitr'))
 if(!require('ggpubr')) (install.packages('ggpubr'))
 if(!require('INLA')) (install.packages("INLA", repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/testing"), dep=TRUE))
 
@@ -635,14 +636,14 @@ crime_tweets_combine_boro %>% gather(condition, total, total_crime, total_hate_c
   ylab("Total Count Per 100,000 Population")
 
 
-# Chloropleth map for year 2019, 2020, and 2021
+# Bivariate chloropleth map for year 2019, 2020, and 2021
 # Note: borough name and geometry columns must be in the first and second column in order
 
 boro_boudaries <- nyc_boundaries(geography = "borough", add_acs_data = T) %>% 
   st_transform(2263) %>% 
   select(borough_name, geometry)
 
-# Function to plot chloropleth map for hate crime vs hate tweets
+# Function to plot bivariate chloropleth map for hate crime vs hate tweets
 plot_chloro_map_tw <- function(df, year) {
   
 data <- df %>% 
@@ -836,89 +837,79 @@ d2 <- d %>%
             avg_rr_p = mean(RR_P),
             avg_rr_b = mean(RR_B))
 
-# Function to plot chloropleth map for relative risk data from poisson distribution model
-plot_chloro_map_rr_p <- function(df, year) {
-  
-data <- df %>% 
+# Plot chloropleth map for relative risk data from poisson distribution model
+map1 <- d2 %>% 
   ungroup() %>% 
-  filter(year==year) %>% 
+  filter(year==2019) %>% 
   rename(borough_name = boro_nm) %>% 
   mutate(borough_name = str_to_title(borough_name)) %>% 
-  select(borough_name, total_hate_crime, avg_rr_p, avg_rr_b) %>% 
   left_join(boro_boudaries, ., by = c("borough_name")) %>% 
-  bi_class(x = total_hate_crime, y = avg_rr_p, style = "quantile", dim = 3)
+  ggplot() +
+    geom_sf(aes(fill = avg_rr_p),
+            color = "white",
+            lwd = 0.2) +
+    scale_fill_viridis_c(
+      name = "Relative Risk",
+      option = "cividis"
+    ) +
+  #labs(title = "Relative Risk for Each Borough for 2019") +
+  theme_void() +
+  theme(plot.title.position = 'plot', 
+        plot.title = element_text(hjust = 0.5)) +
+  theme(panel.grid = element_line(color = "transparent"))
 
-map <- ggplot() + 
-  geom_sf(data = data, mapping = aes(fill = bi_class), color = "white", size = 0.1, show.legend = FALSE) +
-  bi_scale_fill(pal = "GrPink", dim = 3) +
-  labs(
-    subtitle = paste0(year, " Hate Crime & Relative Risk by Poisson Distribution")) + 
-  bi_theme() + 
-  theme(plot.subtitle=element_text(size=18, 
-                                   hjust=0.5, 
-                                   color="black"))
-
-legend <- bi_legend(pal = "GrPink",
-                    dim = 3,
-                    xlab = "Higher Hate Crime",
-                    ylab = "Higher Relative Risk",
-                    size = 8)
-
-final_plot <- ggdraw() +
-  draw_plot(map, 0, 0, 1, 1) +
-  draw_plot(legend, 0.1, 0.5, 0.35, 0.35)
-
-return(final_plot)
-
-}
-
-# Plot all 3 years chloropleth maps
-plot_chloro_map_rr_p(d2, 2019)
-plot_chloro_map_rr_p(d2, 2020)
-plot_chloro_map_rr_p(d2, 2021)
-
-# Function to plot chloropleth map for relative risk data from binomial distribution model
-plot_chloro_map_rr_b <- function(df, year) {
-  
-data <- df %>% 
+map2 <- d2 %>% 
   ungroup() %>% 
-  filter(year==year) %>% 
+  filter(year==2020) %>% 
   rename(borough_name = boro_nm) %>% 
   mutate(borough_name = str_to_title(borough_name)) %>% 
-  select(borough_name, total_hate_crime, avg_rr_p, avg_rr_b) %>% 
   left_join(boro_boudaries, ., by = c("borough_name")) %>% 
-  bi_class(x = total_hate_crime, y = avg_rr_b, style = "quantile", dim = 3)
+  ggplot() +
+    geom_sf(aes(fill = avg_rr_p),
+            color = "white",
+            lwd = 0.2) +
+    scale_fill_viridis_c(
+      name = "Relative Risk",
+      option = "cividis"
+    ) +
+  #labs(title = "Relative Risk for Each Borough for 2019") +
+  theme_void() +
+  theme(plot.title.position = 'plot', 
+        plot.title = element_text(hjust = 0.5)) +
+  theme(panel.grid = element_line(color = "transparent"))
 
-map <- ggplot() + 
-  geom_sf(data = data, 
-          mapping = aes(fill = bi_class), 
-          color = "white", 
-          size = 0.1, 
-          show.legend = FALSE) +
-  bi_scale_fill(pal = "GrPink", dim = 3) +
-  labs(subtitle = paste0(year, " Hate Crime & Relative Risk by Binomial Distribution")) + 
-  bi_theme() + 
-  theme(plot.subtitle=element_text(size=18, 
-                                   hjust=0.5, 
-                                   color="black"))
 
-legend <- bi_legend(pal = "GrPink",
-                    dim = 3,
-                    xlab = "Higher Hate Crime",
-                    ylab = "Higher Relative Risk",
-                    size = 8)
+map3 <- d2 %>% 
+  ungroup() %>% 
+  filter(year==2021) %>% 
+  rename(borough_name = boro_nm) %>% 
+  mutate(borough_name = str_to_title(borough_name)) %>% 
+  left_join(boro_boudaries, ., by = c("borough_name")) %>% 
+  ggplot() +
+    geom_sf(aes(fill = avg_rr_p),
+            color = "white",
+            lwd = 0.2) +
+    scale_fill_viridis_c(
+      name = "Relative Risk",
+      option = "cividis"
+    ) +
+  #labs(title = "Relative Risk for Each Borough for 2019") +
+  theme_void() +
+  theme(plot.title.position = 'plot', 
+        plot.title = element_text(hjust = 0.5)) +
+  theme(panel.grid = element_line(color = "transparent"))
 
-final_plot <- ggdraw() +
-  draw_plot(map, 0, 0, 1, 1) +
-  draw_plot(legend, 0.1, 0.5, 0.35, 0.35)
+plot_legend <- get_legend(map3)
 
-return(final_plot)
-
-}
-
-# Plot all 3 years chloropleth maps
-plot_chloro_map_rr_b(d2, 2019)
-plot_chloro_map_rr_b(d2, 2020)
-plot_chloro_map_rr_b(d2, 2021)
+annotate_figure(ggarrange(map1 + theme(legend.position = "none"), 
+                          map2 + theme(legend.position = "none"),
+                          map3 + theme(legend.position = "none"),
+                          plot_legend,
+                          ncol = 2, nrow = 2, 
+                          labels = c("2019", "2020", "2021")) , 
+          top = text_grob("Relative Risk for Each Borough", 
+                          color = "red", 
+                          face = "bold", 
+                          size = 14))
 
 ```

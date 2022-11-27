@@ -76,6 +76,8 @@ if(!require('INLA')) (install.packages("INLA", repos=c(getOption("repos"), INLA=
 
 # Abstract
 
+
+
 \newpage
 
 # Introduction
@@ -188,7 +190,7 @@ $$log(\theta_{ij}) = \alpha + \beta X_{i} + u_{i} + s_{i} + \gamma t_{j} + \sigm
 
 The terms which are used in both model 2 and 4 are explained here. $$\alpha$$ is the intercept, $$\beta$$ is the coefficient of covariate X at i-th location. $$\beta X_{i}$$ is the fixed effect of the model. $$ u_{i} + s_{i}$$ is the area random effect. $$\gamma t_{j}$$ represents the purely temporal term, and $$\gamma$$ is the global linear trend effect. $$\sigma_{i} t_{j}$$ represents the spatio-temporal interaction term.
 
-Popular metrics such as DIC (*deviance information criterion*), CPO (*conditional predictive ordinate*), and WAIC (*Watanabe–Akaike information criterion*), will be used as a performance measurement to compare and measure how good a model is.
+In order to obtain the expected count of hate crime, $$E_{ij}$$ in the Poisson model, SpatialEpi package ([\textcolor{cyan}{Kim et al, 2018}](https://github.com/rudeboybert/SpatialEpi)) will be used. Popular metrics such as DIC (*deviance information criterion*), CPO (*conditional predictive ordinate*), and WAIC (*Watanabe–Akaike information criterion*), will be used as a performance measurement to compare and measure how good a model is. All these metrics are available in the result summary generated from the INLA package (Integrated Nested Laplace Approximation) package ([\textcolor{cyan}{Rue et al, 2009}](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x)).
 
 ## Scope and Limitations
 
@@ -202,7 +204,7 @@ Our scope is to analyze the tweet's data created in the five boroughs of New Yor
 
 The crime data described as harassment and assault and tweets data which are negative sentiments are selected for analysis in this study. 920 thousand out of 1.2 million of tweets are identified as negative attitude tweets. Many of these negative tweets contain key terms commonly used in hateful messages. In the figure 1, it shows the top 100 most frequent mentioned words.   
 
-![Figure 1: Word clouds of top 100 most often metnioned words in the negative attitude tweets]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\wordcloud.png")
+![Figure 1: Word clouds of top 100 most often mentioned words in the negative attitude tweets]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\wordcloud.png")
 
 From the observed hate crime rate data, we found that these minority of groups, black, other races and female, are facing higher chance of being harassed and assaulted in most of the boroughs. The figure 2 and 3 below show these trends and particularly Bronx borough has the highest hate crime in both race and sex compared to other boroughs.
 
@@ -222,15 +224,19 @@ Now, if we put hate crime and hateful tweets count together and compare for each
 
 Bayesian inference approximation method, INLA (Integrated Nested Laplace Approximation) package ([\textcolor{cyan}{Rue et al, 2009}](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x)), is used to test the hypothesis of whether hateful tweets covariate is statistically significant correlated to the hate crime and developing trend of relative risk of hate crime occurred in 5 boroughs. 
 
-Two types of Bayesian models are developed in this study. One model is based on Poisson distribution and another is based on Binomial distribution. For model performance evaluation, DIC, WAIC, CPO metrics are used. A smaller the value of these 3 metrics indicates a better prediction quality of the model. The table 2 shows Poisson model has better performance than Binomial model.
+Two types of Bayesian models are developed in this study. One model is based on Poisson distribution and another is based on Binomial distribution. Both models are considered as mixed effects model because the model has both fixed and random effects. For model performance evaluation, DIC, WAIC, CPO metrics are used. A smaller the value of these 3 metrics indicates a better prediction quality of the model. The table 2 shows Poisson model has better performance than Binomial model.
 
-![Table 2: Performance evaluation for Poisson and Binomial distribution models using DIC, WAIC, and CPO metrics]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Evaluation Table 2.png")
+![Table 2: Performance evaluation for Poisson and Binomial distribution models using DIC, WAIC, and CPO metrics]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Evaluation Table.png")
 
-From the analysis results as shown in the figure 7, we have observed that the hateful tweets covariate and time id variables which coefficient at 95% confidence interval contain zero. This means uncertainty whether both of these variables have effect on contributing to hate crime and implies they could have a positive or negative effect on the hate crime happening.
+From the analysis results as shown in the figure 7, we have observed that the hateful tweets covariate and time id variables which coefficient at 95% confidence interval contain zero for both models. This means uncertainty whether both of these variables have effect on contributing to hate crime and implies they could have a positive or negative effect on the hate crime happening. Table 3 and 4 shows the coefficient at 95% confidence interval for Poisson models.
 
 ![Figure 7: Posterior distribution of hateful tweets covariate and time id variables coefficient at 95% confidence intervals]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Posterior Distribution of HT and TM Coefficient CI.png")
 
-In addition to verifying the fixed variables' statistical significant, average posteriors of relative risks in each year for the 5 boroughs are computed and developing trends are showed in the figure 8. From the figure, we can see that the relative risk for Manhattan and Bronx has no change over the 3 years period. The relative risk of Queens and Staten Island have become lower from 2019 to 2021 but Brooklyn has increased. This implies that Brooklyn areas post higher risk in hate crime occurring compared to other 4 boroughs.
+![Table 3: Fixed Effects Coefficient at 95% confidence intervals for Poisson model]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Posterior Distribution of HT and TM Coefficient CI.png")
+
+![Table 4: Random Effects Coefficient at 95% confidence intervals for Poisson model]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Posterior Distribution of HT and TM Coefficient CI.png")
+
+In addition to verifying the fixed variables' statistical significant, average posteriors of relative risks in each year for the 5 boroughs are computed and developing trends are showed in the figure 8. From the figure, we can see that the relative risk for Manhattan and Bronx has no change over the 3 years period. Because the relative risk of Bronx is much greater than 1, hate crime is more likely to occur in this area than its neighborhoods. The relative risk of Queens and Staten Island have become lower from 2019 to 2021 but Brooklyn has increased. This implies that Brooklyn areas post higher risk in hate crime occurring compared to other 4 boroughs over the 3 years period.
 
 ![Figure 8: Average posteriors of relative risks in each year for the 5 boroughs]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Relative Risk Each Borough.png")
 
@@ -239,22 +245,21 @@ In addition to verifying the fixed variables' statistical significant, average p
 
 # Discussion
 
-The analysis results in above have verified that our hypothesis of hateful tweets covariate has no relationship with the hate crime occurred since its coefficient is statistically insignificant. This match with result mentioned in this ([\textcolor{cyan}{Williams et al., 2019}](https://academic.oup.com/bjc/article/60/1/93/5537169)) study where . 
+First of all, the Syuzhet package ([\textcolor{cyan}{Kim H., 2022}](http://www.digitalhumanities.org/dhq/vol/16/2/000612/000612.html)) has done great job in identifying the negative attitude tweets from the raw data we collected from Twitter in this study. Most of the top 100 terms from the negative tweets dataset are very offensive and we assume that many of these tweets are hate speech. The trend of total count of negative attitude tweets from 2019 and 2021 as shown in the figure 4 is interesting to discuss here. Surprisingly, the total count of negative attitude tweets is starting to drop sharply after July 2020 compared to previous months since January 2019 which are pretty stable. The main factor that caused this to happen probably because people are working from home. It'll be less stressful without commuting to work and in turn expressing more positive attitude toward their daily social media interaction.  
 
-But then observed crime data have proved that hate crime did happen mostly on minority groups especially black and other races and female.
+The analysis results in above have verified that our hypothesis of hateful tweets covariate has no relationship with the hate crime occurred since its coefficient is statistically insignificant. This matches with the result found in this ([\textcolor{cyan}{Williams et al., 2019}](https://academic.oup.com/bjc/article/60/1/93/5537169)) study where there is no association between online hate speech from Twitter to the hate crime. But then observed crime data have proved that hate crime did happen mostly on minority groups especially black and other races and female.
 
-Our research hypothesis is that higher offensive tweets from an area have strong correlation to the number of crimes committed in that area and minority groups are mostly the target. 
+In the formula we built to run with the INLA package, we put hateful tweets as covariate because we think hateful tweets can explain the hate crime risk but the results don't show the association. There are of course other factors we have not taken into account for the model, we are modeling those factors using random effects. We are going to put spatial random effect, it's possible that two areas are close to each other they have similar risk.
 
-A popular spatial model is the Besag-York-Mollié (BYM) model (Besag, York, and Mollié 1991) which takes into account that data may be spatially correlated and observations in neighboring areas may be more similar than observations in areas that are farther away. This model includes a spatial random effect that smoothes the data according to a neighborhood structure, and an unstructured exchangeable component that models uncorrelated noise . In spatio-temporal settings where disease counts are observed over time, spatio-temporal models that account not only for spatial structure but also for temporal correlations and spatio-temporal interactions are used.
+A popular spatial model, BYM ([\textcolor{cyan}{Besag et al., 1991}](https://link.springer.com/article/10.1007/BF00116466)), is used in the model. This model will account for data that is spatially correlated for example, neighboring areas could have similar trend than those areas that are neither sharing border with one another or farther away. These patterns have been can be observed in the figure 8. Poisson model performs better than Binomial model in this study case because there is no fixed of sample size being collected but number of crimes happening each month is random. Because total sample size is a random, an important characteristic of the Poisson distribution, Poisson model performs better in our case study ([\textcolor{cyan}{Howell D., 2003}](https://www.uvm.edu/~statdhtx/StatPages/More_Stuff/PoissonBinomial/PoissonBinom.html)).
 
-In the formula, we put hateful tweets as covariate because we think hateful tweets can explain the hate crime risk but of course other factors we have not measured we don't put in the model and we are going to model those factors using random effects. We are going to put spatial random effect, it's possible that two areas are close to each other they have similar risk. 
-
-
-Although the fixed variables except the intercept, the spatial random effect components play a big role because we are observing that areas that are close to each other having similar risk. 
+Although the fixed variables, except the intercept, which coefficient is not statistically significant, the spatial random effect components play a big role in the model because we are observing that areas that are close to each other having similar risk for example Brooklyn and Queens. The inverse of relative risk between Bronx and Manhattan, one of the main reasons might be the difference in socio-economic status among the residents between the two areas. If analysis can be done at the zip code level of NYC or at the county level for the New York state, we may be able to observe more examples of areas sharing border having similar risk.
 
 \newpage
 
 # Conclusion
+
+
 
 - collect longer period data from Twitter or from different social media
 - introduce socio-economic variables
@@ -330,6 +335,12 @@ Although the fixed variables except the intercept, the spatial random effect com
 30. Hu et al. (2018, October 31). *Urban crime prediction based on spatio-temporal Bayesian model*. National Library of Medicine.  Retrieved from https://ncbi.nlm.nih.gov/pmc/articles/PMC6209226/.
 
 31. Rue et al. (2009, April 6). *Approximate Bayesian inference for latent Gaussian models by using integrated nested Laplace approximations*. Journal of the Royal Statistical Society. Retrieved from https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x.
+
+32. Besag et al. (1991). *Bayesian image restoration, with two applications in spatial statistics*. Springer. Retrieved from https://link.springer.com/article/10.1007/BF00116466.
+
+33. Kim et al. (2018). *SpatialEpi: Methods and Data for Spatial Epidemiology*. Github. Retrieved from https://github.com/rudeboybert/SpatialEpi.
+
+34. Howell D. (2003, January 3). *The Poisson and Binomial Distributions*. University of Vermont. Retrieved from https://www.uvm.edu/~statdhtx/StatPages/More_Stuff/PoissonBinomial/PoissonBinom.html.
 
 \newpage
 
@@ -970,7 +981,7 @@ marginal_tm_p <- inla.smarginal(res_p$marginals.fixed$idtime)
 marginal_tm_p <- data.frame(marginal_tm_p)
 marginal_tm_p_plot <-ggplot(marginal_tm_p, aes(x = x, y = y)) + 
   geom_line() + 
-  labs(x = expression(beta[1]), y = "Density") +
+  labs(x = expression(beta[2]), y = "Density") +
   geom_vline(xintercept = 0, col = "blue") + 
   theme_bw() + 
   ggtitle("Time ID Coefficient (Poisson)")
@@ -990,14 +1001,14 @@ marginal_tm_b <- inla.smarginal(res_b$marginals.fixed$idtime)
 marginal_tm_b <- data.frame(marginal_tm_b)
 marginal_tm_b_plot <- ggplot(marginal_tm_b, aes(x = x, y = y)) + 
   geom_line() + 
-  labs(x = expression(beta[1]), y = "Density") +
+  labs(x = expression(beta[2]), y = "Density") +
   geom_vline(xintercept = 0, col = "blue") + 
   theme_bw() + 
   ggtitle("Time ID Coefficient (Binomial)")
 
 # Arrange all plots into a single figure
-annotate_figure(ggarrange(marginal_tw_p_plot + rremove("x.title"), 
-                          marginal_tw_b_plot + rremove("x.title") + rremove("y.title"),
+annotate_figure(ggarrange(marginal_tw_p_plot, 
+                          marginal_tw_b_plot + rremove("y.title"),
                           marginal_tm_p_plot, 
                           marginal_tm_b_plot + rremove("y.title"), 
                            ncol = 2, nrow = 2) , 
@@ -1018,6 +1029,25 @@ kable(data.frame(Model = c('Binomial distribution model', 'Poisson distribution 
   kable_styling(bootstrap_options = c("bordered", "striped"), full_width = F) %>% 
   row_spec(row = 0, bold = TRUE)
 
+# Get fixed effects coefficient CI into a table
+fixed_tbl <- data.frame(summary(res_p)[3]) 
+colnames(fixed_tbl) = gsub("fixed.", "", colnames(fixed_tbl))
+fixed_tbl %>% 
+  select(-kld) %>% 
+  kable(format="html", 
+      align = "c",
+      table.attr = "style = \"color: black;\"",
+      caption = "<center><b>Table 3: Fixed Effects Coefficient at 95 % CI <b></center>")  %>% kable_styling(bootstrap_options = c("bordered", "striped"), full_width = F) %>% 
+  row_spec(row = 0, bold = TRUE)
+
+# Get random effects variables coefficient CI into a table
+hyperpar_tbl <- data.frame(summary(res_p)[4]) 
+colnames(hyperpar_tbl) = gsub("hyperpar.", "", colnames(hyperpar_tbl))
+hyperpar_tbl %>% kable(format="html", 
+      align = "c",
+      table.attr = "style = \"color: black;\"",
+      caption = "<center><b>Table 4: Random Effects Coefficient at 95 % CI <b></center>")  %>% kable_styling(bootstrap_options = c("bordered", "striped"), full_width = F) %>% 
+  row_spec(row = 0, bold = TRUE)
 
 # Merge relative risk value to the dataset
 d$RR_P <- res_p$summary.fitted.values[, "mean"]

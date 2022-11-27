@@ -63,6 +63,11 @@ if(!require('htmltools')) (install.packages('htmltools'))
 if(!require('kableExtra')) (install.packages('kableExtra'))
 if(!require('knitr')) (install.packages('knitr'))
 if(!require('ggpubr')) (install.packages('ggpubr'))
+if(!require('tm')) (install.packages('tm'))
+if(!require('stringr')) (install.packages('stringr'))
+if(!require('textclean')) (install.packages('textclean'))
+if(!require('e1071')) (install.packages('e1071'))
+if(!require('DMwR2')) (install.packages('DMwR2'))
 if(!require('INLA')) (install.packages("INLA", repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/testing"), dep=TRUE))
 
 ```
@@ -160,12 +165,12 @@ We will use a sentiment analysis approach to annotate tweets into positive (scor
 
 $$\\[0.5in]$$
 
-![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\\Mid-Term\\Architecture of the Proposed Methodology.png")
+![Architecture of the Proposed Methodology]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Mid-Term\\Architecture of the Proposed Methodology.png")
 
 
 ## Model
 
-In this study, we will develop two spatio-temporal Bayesian models. One obeys a Poisson distribution and another obeys Binomial distribution as below.
+In this study, we will develop two spatio-temporal Bayesian models. One obeys a Poisson distribution and another obeys Binomial distribution as below ([\textcolor{cyan}{Moraga, 2019}](https://www.paulamoraga.com/book-geospatial/sec-arealdataexamplest.html#model-2); [\textcolor{cyan}{Hu et al., 2019}](https://ncbi.nlm.nih.gov/pmc/articles/PMC6209226/)).
 
 $${Y}_{ij} &\sim Binomial(n_{ij},p_{ij})$$,                                           (1)
 
@@ -195,21 +200,66 @@ Our scope is to analyze the tweet's data created in the five boroughs of New Yor
 
 # Results
 
+The crime data described as harassment and assault and tweets data which are negative sentiments are selected for analysis in this study. 920 thousand out of 1.2 million of tweets are identified as negative attitude tweets. Many of these negative tweets contain key terms commonly used in hateful messages. In the figure 1, it shows the top 100 most frequent mentioned words.   
 
+![Figure 1: Word clouds of top 100 most often metnioned words in the negative attitude tweets]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\wordcloud.png")
+
+From the observed hate crime rate data, we found that these minority of groups, black, other races and female, are facing higher chance of being harassed and assaulted in most of the boroughs. The figure 2 and 3 below show these trends and particularly Bronx borough has the highest hate crime in both race and sex compared to other boroughs.
+
+![Figure 2: Total hate crime by race for each borough between 2019 and 2021]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Hate Crime By Race.png")
+
+![Figure 3: Total hate crime by sex for each borough between 2019 and 2021]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Hate Crime By Sex.png")
+
+The observed hate crime rate data and detected negative attitude tweets from year 2019 to 2021 are analyzed. In the figure 4, we can see the trend of hate crime is pretty stable over the 3 years period but the negative attitude tweets drop sharply, nearly half compared to previous periods, after July 2020.    
+
+![Figure 4: Monthly count of crime and negative attitude tweets between 2019 and 2021]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Monthly Count Crime and Negative Tweets.png")
+
+Now, if we put hate crime and hateful tweets count together and compare for each borough as shown in the figure 5 and 6, Manhattan has the higher number of hate crime and hateful tweets followed by Bronx, Brooklyn, Queens, and Staten Island.
+
+![Figure 5: Total hate crime and hateful tweets for each borough between 2019 and 2021]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Total Hate Crime vs Total Hateful Tweets by Borough.png")
+
+![Figure 6: Bivariate chloropleth map for total hate crime and hateful tweets in 2019]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Hate Crime vs Hateful Tweets 2019 Chloropleth Map.png")
+
+Bayesian inference approximation method, INLA (Integrated Nested Laplace Approximation) package ([\textcolor{cyan}{Rue et al, 2009}](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x)), is used to test the hypothesis of whether hateful tweets covariate is statistically significant correlated to the hate crime and developing trend of relative risk of hate crime occurred in 5 boroughs. 
+
+Two types of Bayesian models are developed in this study. One model is based on Poisson distribution and another is based on Binomial distribution. For model performance evaluation, DIC, WAIC, CPO metrics are used. A smaller the value of these 3 metrics indicates a better prediction quality of the model. The table 2 shows Poisson model has better performance than Binomial model.
+
+![Table 2: Performance evaluation for Poisson and Binomial distribution models using DIC, WAIC, and CPO metrics]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Evaluation Table 2.png")
+
+From the analysis results as shown in the figure 7, we have observed that the hateful tweets covariate and time id variables which coefficient at 95% confidence interval contain zero. This means uncertainty whether both of these variables have effect on contributing to hate crime and implies they could have a positive or negative effect on the hate crime happening.
+
+![Figure 7: Posterior distribution of hateful tweets covariate and time id variables coefficient at 95% confidence intervals]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Posterior Distribution of HT and TM Coefficient CI.png")
+
+In addition to verifying the fixed variables' statistical significant, average posteriors of relative risks in each year for the 5 boroughs are computed and developing trends are showed in the figure 8. From the figure, we can see that the relative risk for Manhattan and Bronx has no change over the 3 years period. The relative risk of Queens and Staten Island have become lower from 2019 to 2021 but Brooklyn has increased. This implies that Brooklyn areas post higher risk in hate crime occurring compared to other 4 boroughs.
+
+![Figure 8: Average posteriors of relative risks in each year for the 5 boroughs]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Relative Risk Each Borough.png")
 
 
 \newpage
 
 # Discussion
 
+The analysis results in above have verified that our hypothesis of hateful tweets covariate has no relationship with the hate crime occurred since its coefficient is statistically insignificant. This match with result mentioned in this ([\textcolor{cyan}{Williams et al., 2019}](https://academic.oup.com/bjc/article/60/1/93/5537169)) study where . 
+
+But then observed crime data have proved that hate crime did happen mostly on minority groups especially black and other races and female.
+
+Our research hypothesis is that higher offensive tweets from an area have strong correlation to the number of crimes committed in that area and minority groups are mostly the target. 
+
+A popular spatial model is the Besag-York-Mollié (BYM) model (Besag, York, and Mollié 1991) which takes into account that data may be spatially correlated and observations in neighboring areas may be more similar than observations in areas that are farther away. This model includes a spatial random effect that smoothes the data according to a neighborhood structure, and an unstructured exchangeable component that models uncorrelated noise . In spatio-temporal settings where disease counts are observed over time, spatio-temporal models that account not only for spatial structure but also for temporal correlations and spatio-temporal interactions are used.
+
+In the formula, we put hateful tweets as covariate because we think hateful tweets can explain the hate crime risk but of course other factors we have not measured we don't put in the model and we are going to model those factors using random effects. We are going to put spatial random effect, it's possible that two areas are close to each other they have similar risk. 
 
 
+Although the fixed variables except the intercept, the spatial random effect components play a big role because we are observing that areas that are close to each other having similar risk. 
 
 \newpage
 
 # Conclusion
 
-
+- collect longer period data from Twitter or from different social media
+- introduce socio-economic variables
+- instead of limiting to new york city areas, do for the whole new york state and analyze at county level
+- 
 
 
 \newpage
@@ -259,7 +309,7 @@ Our scope is to analyze the tweet's data created in the five boroughs of New Yor
 
 20. Miró-Llinares F. & Rodriguez-Sala J.J. (2016, July). *Cyber Hate Speech on Twitter: Analyzing Disruptive Events from Social Media to Build a Violent Communication and Hate Speech taxonomy*. ResearchGate. Retrieved from https://www.researchgate.net/publication/308487177_Cyber_hate_speech_on_twitter_Analyzing_disruptive_events_from_social_media_to_build_a_violent_communication_and_hate_speech_taxonomy
 
-21. Chen et al. (2015, June 8). *Crime prediction using Twitter sentiment and weather*. IEEE Xplore.  Retrieved from https://ieeexplore.ieee.org/abstract/document/7117012/authors#authors
+21. Chen et al. (2015, June 8). *Crime prediction using Twitter sentiment and weather*. IEEE Xplore.  Retrieved from https://ieeexplore.ieee.org/abstract/document/7117012/authors#authors.
 
 22. Hashtagify. Search And Find The Best Twitter Hashtags. Available online: https://hashtagify.me/ (accessed on 15 March 2022).
 
@@ -273,9 +323,13 @@ Our scope is to analyze the tweet's data created in the five boroughs of New Yor
 
 27. 2020 Census Data. NYC Planning. Available online: https://www.nyc.gov/site/planning/planning-level/nyc-population/2020-census.page##2020-census-results (accessed on 29 October 2022).
 
-28. Moraga P. (2019, November 25). *Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny*. Chapman & Hall/CRC Biostatistics Series.  Retrieved from https://www.paulamoraga.com/book-geospatial/sec-arealdataexamplest.html#model-2
+28. Moraga P. (2019, November 25). *Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny*. Chapman & Hall/CRC Biostatistics Series.  Retrieved from https://www.paulamoraga.com/book-geospatial/sec-arealdataexamplest.html#model-2.
 
-29. NYCdata. Baruch College. Available online: https://www.baruch.cuny.edu/nycdata/population-geography/age_distribution.htm
+29. NYCdata. Baruch College. Available online: https://www.baruch.cuny.edu/nycdata/population-geography/age_distribution.htm (accessed on 24 November 2022),
+
+30. Hu et al. (2018, October 31). *Urban crime prediction based on spatio-temporal Bayesian model*. National Library of Medicine.  Retrieved from https://ncbi.nlm.nih.gov/pmc/articles/PMC6209226/.
+
+31. Rue et al. (2009, April 6). *Approximate Bayesian inference for latent Gaussian models by using integrated nested Laplace approximations*. Journal of the Royal Statistical Society. Retrieved from https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x.
 
 \newpage
 
@@ -452,7 +506,7 @@ tweets_count_boro <- tweets_negative %>%
 
 # Appendix C. Data Exploration
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 
 # Tokenize the text and see frequency of words greater than 
 top_words <- tweets_negative %>% 
@@ -555,7 +609,7 @@ hate_crime %>%
         legend.position="bottom", 
         axis.title.x=element_blank(), 
         plot.title = element_text(hjust = 0.5)) + 
-  ggtitle("Total Hate Crime Victim By Race Across Each Borough (2019 - 2021)") + 
+  ggtitle("Total Hate Crime Victim by Race for Each Borough (2019 - 2021)") + 
   ylab("Total Hate Crime Per 100,000 Population")
 
 # Visualize total count of victim sex for each borough between year 2019 and 2021 
@@ -572,7 +626,7 @@ hate_crime %>%
         legend.position="bottom", 
         axis.title.x=element_blank(), 
         plot.title = element_text(hjust = 0.5)) + 
-  ggtitle("Total Hate Crime Victim By Sex Across Each Borough (2019 - 2021)") + 
+  ggtitle("Total Hate Crime Victim by Sex for Each Borough (2019 - 2021)") + 
   ylab("Total Hate Crime Per 100,000 Population")
 
 # Visualize total count of victim age group for each borough between year 2019 and 2021 
@@ -584,7 +638,7 @@ hate_crime %>% group_by(boro_nm, vic_age_group) %>% summarise(total=n()) %>%
         legend.position="bottom", 
         axis.title.x=element_blank(), 
         plot.title = element_text(hjust = 0.5)) + 
-  ggtitle("Total Hate Crime By Victim Age Group Across Each Borough (2019 - 2021)") + 
+  ggtitle("Total Hate Crime by Victim Age Group for Each Borough (2019 - 2021)") + 
   ylab("Count")
 
 ```
@@ -593,7 +647,148 @@ hate_crime %>% group_by(boro_nm, vic_age_group) %>% summarise(total=n()) %>%
 
 # Appendix D. Data Preparation
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
+
+# Read hateful dataset
+hate_dataset_ml <- read.csv("https://raw.githubusercontent.com/SieSiongWong/DATA-698/master/Data/hate_dataset_ml.csv")
+
+set.seed(1234)
+index<-sample(nrow(hate_dataset_ml),0.7*nrow(hate_dataset_ml))
+hate_dataset_ml_train<-hate_dataset_ml[index,]
+hate_dataset_ml_test<-hate_dataset_ml[-index,]
+
+# Data cleaning
+hate_dataset_ml_train$Text <- str_squish(hate_dataset_ml_train$Text)
+hate_dataset_ml_test$Text <- str_squish(hate_dataset_ml_test$Text)
+hate_dataset_ml_train$Text <- replace_contraction(hate_dataset_ml_train$Text)
+hate_dataset_ml_test$Text<- replace_contraction(hate_dataset_ml_test$Text)
+hate_dataset_ml_train$Text  <- removeNumbers(hate_dataset_ml_train$Text )
+hate_dataset_ml_test$Text  <- removeNumbers(hate_dataset_ml_test$Text)
+hate_dataset_ml_train$Text <- removePunctuation(hate_dataset_ml_train$Text)
+hate_dataset_ml_test$Text <- removePunctuation(hate_dataset_ml_test$Text)
+hate_dataset_ml_train$Text  <- replace_emoticon(hate_dataset_ml_train$Text)
+hate_dataset_ml_test$Text  <- replace_emoticon(hate_dataset_ml_test$Text)
+comb_dat <- Corpus(VectorSource(c(hate_dataset_ml_train$Text,
+                                  hate_dataset_ml_test$Text)))
+comb_dat <- tm_map(comb_dat, stripWhitespace)
+comb_dat <- tm_map(comb_dat, removePunctuation)
+comb_dat <- tm_map(comb_dat, removeWords, stopwords("english"))
+comb_dat <- tm_map(comb_dat, content_transformer(tolower))
+comb_dat <- tm_map(comb_dat, stemDocument)
+inspect(comb_dat[1:6])
+len1 <- length(comb_dat)
+
+# Statistics of high frequency words
+hate1 <- rbind(hate_dataset_ml_train,hate_dataset_ml_test)
+data(stop_words)
+hate1%>%
+ unnest_tokens(input = Text, output = word)%>%
+ select(word)%>%
+ anti_join(stop_words)%>%
+ group_by(word)%>%
+ summarize(count = n())%>%
+ ungroup()%>%
+ arrange(desc(count))%>%
+ top_n(300)
+minDocFreq = 10
+maxDocFreq = 839
+comb_dtm <- DocumentTermMatrix(comb_dat, control = list(bounds = list(global = c(minDocFreq, maxDocFreq))))
+
+# Third, remove sparse terms
+comb_mat = removeSparseTerms(comb_dtm, .99)
+inspect(comb_mat)
+findFreqTerms(comb_mat)
+
+# Create training and test data in the form of matrices and vectors
+Xtrain = as.matrix(comb_mat[1:nrow(hate_dataset_ml_train),])
+Ytrain = hate_dataset_ml_train$label
+Xtest = as.matrix(comb_mat[(nrow(hate_dataset_ml_train)+1):(nrow(hate_dataset_ml_train)+nrow(hate_dataset_ml_test)), ])
+Ytest= hate_dataset_ml_test$label
+
+# Output the preprocessed data for later analysis
+save(file = 'processed_text.RData', 'Xtrain', 'Ytrain', 'Xtest', 'Ytest')
+load('processed_text.RData')
+```
+
+```{r message=FALSE, warning=FALSE}
+
+# Naive Bayes
+nb.mod = naiveBayes(Xtrain, Ytrain)
+nb.pred = predict(nb.mod, Xtest)
+out.df <- data.frame(lable = Ytest, label_p = nb.pred)
+table(out.df$lable,out.df$label_p)
+accuracy=(154+267)/(154+160+19+267)
+accuracy
+```
+
+```{r message=FALSE, warning=FALSE}
+
+# Knn
+df1 <- data.frame(Xtrain,Ytrain)
+df1 <- rename(df1,"lable"="Ytrain")
+df_test <- data.frame(Xtest)
+nn5 <- kNN(lable ~ .,df1,df_test,stand=FALSE,k=5)
+out.df1 <- data.frame(lable = Ytest, lable_pred = nn5)
+table(out.df1$lable,out.df1$lable_pred)
+accuracy1 = (271+189)/(271+42+97+189)
+accuracy1
+```
+
+```{r message=FALSE, warning=FALSE}
+
+#Logistic Regression
+df2_train <- data.frame(Xtrain,Ytrain)
+df2_test <- data.frame(Xtest, Ytest)
+df2_train <- rename(df2_train,"label"="Ytrain")
+df2_test <- rename(df2_test, "label"="Ytest")
+logit <- glm(label~., df2_train, family = "binomial")
+predict <- predict(logit, df2_test, type = 'response')
+
+# confusion matrix
+table_mat <- table(df2_test$label, predict > 0.5)
+table_mat
+
+#Logistic Regression Accuracy
+accuracy_Test <- sum(diag(table_mat)) / sum(table_mat)
+accuracy_Test
+```
+
+```{r message=FALSE, warning=FALSE}
+
+# SVM
+svm <- svm(label ~ ., df2_train,
+                type = "C-classification",
+                kernel = "linear")
+predict2 <- predict(svm, df2_test, type = 'response')
+
+# Confusion matrix
+table_mat2 <- table(df2_test$label, predict2)
+table_mat2
+
+# SVM accuracy
+accuracy_Test2 <- sum(diag(table_mat2)) / sum(table_mat2)
+accuracy_Test2
+```
+```{r}
+
+# Data cleaning
+
+hate_dataset_ml_test$Text <- str_squish(hate_dataset_ml_test$Text)
+hate_dataset_ml_test$Text<- replace_contraction(hate_dataset_ml_test$Text)
+hate_dataset_ml_test$Text  <- removeNumbers(hate_dataset_ml_test$Text)
+hate_dataset_ml_test$Text <- removePunctuation(hate_dataset_ml_test$Text)
+hate_dataset_ml_test$Text  <- replace_emoticon(hate_dataset_ml_test$Text)
+comb_dat <- Corpus(VectorSource(c(hate_dataset_ml_train$Text,
+                                  hate_dataset_ml_test$Text)))
+comb_dat <- tm_map(comb_dat, stripWhitespace)
+comb_dat <- tm_map(comb_dat, removePunctuation)
+comb_dat <- tm_map(comb_dat, removeWords, stopwords("english"))
+comb_dat <- tm_map(comb_dat, content_transformer(tolower))
+comb_dat <- tm_map(comb_dat, stemDocument)
+
+```
+
+```{r message=FALSE, warning=FALSE}
 
 # 5 boroughs population
 boro_pop <- data.frame(boro_nm = c('BROOKLYN','MANHATTAN','QUEENS','BRONX','STATEN ISLAND'),
@@ -694,7 +889,7 @@ plot_chloro_map_tw(crime_tweets_combine_yr, 2021)
 
 # Appendix E. Build Models
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
 # Create a neighborhood matrix to define the spatial random effect
 nb <- poly2nb(boro_boudaries)
@@ -753,7 +948,7 @@ res_b <- inla(formula,
 
 # Appendix F. Model Evaluation
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
 # Get summary for poisson and binomial models
 summary(res_p)

@@ -247,7 +247,7 @@ In addition to verifying the fixed variables' statistical significant, average p
 
 First of all, the Syuzhet package ([\textcolor{cyan}{Kim H., 2022}](http://www.digitalhumanities.org/dhq/vol/16/2/000612/000612.html)) has done great job in identifying the negative attitude tweets from the raw data we collected from Twitter in this study. Most of the top 100 terms from the negative tweets dataset are very offensive and we assume that many of these tweets are hate speech. The trend of total count of negative attitude tweets from 2019 and 2021 as shown in the figure 4 is interesting to discuss here. Surprisingly, the total count of negative attitude tweets is starting to drop sharply after July 2020 compared to previous months since January 2019 which are pretty stable. The main factor that caused this to happen probably because people are working from home. It'll be less stressful without commuting to work and in turn expressing more positive attitude toward their daily social media interaction.  
 
-The analysis results in above have verified that our hypothesis of hateful tweets covariate has no relationship with the hate crime occurred since its coefficient is statistically insignificant. This matches with the result found in this ([\textcolor{cyan}{Williams et al., 2019}](https://academic.oup.com/bjc/article/60/1/93/5537169)) study where there is no association between online hate speech from Twitter to the hate crime. But then observed crime data have proved that hate crime did happen mostly on minority groups especially black and other races and female.
+The analysis results in above have verified that our hypothesis of hateful tweets covariate has no relationship with the hate crime occurred since its coefficient is statistically insignificant. This matches with the result found in these ([\textcolor{cyan}{Williams et al., 2019}](https://academic.oup.com/bjc/article/60/1/93/5537169); [\textcolor{cyan}{Curiel et al., 2020}](https://www.nature.com/articles/s41599-020-0430-7#Sec8)) studies where there is no association between online hate speech to the hate crime. But then the observed crime data have shown that hate crime did happen mostly on minority groups especially black, other races, and female.
 
 In the formula we built to run with the INLA package, we put hateful tweets as covariate because we think hateful tweets can explain the hate crime risk but the results don't show the association. There are of course other factors we have not taken into account for the model, we are modeling those factors using random effects. We are going to put spatial random effect, it's possible that two areas are close to each other they have similar risk.
 
@@ -259,12 +259,7 @@ Although the fixed variables, except the intercept, which coefficient is not sta
 
 # Conclusion
 
-
-
-- collect longer period data from Twitter or from different social media
-- introduce socio-economic variables
-- instead of limiting to new york city areas, do for the whole new york state and analyze at county level
-- 
+Nowadays, social media plays a critical role in influencing people perception on everything we see, hear, and read in daily. The goal of this study is to find out if hateful tweets exist in Twitter has any association with the hate crime in the New York City areas and whether minority groups are mostly the victim. Although we found that hateful tweets are not statistically significant correlate with hate crime, but based on the observed NYPD crime data we do see minority groups which race is black, other, and female are mostly the victim for the hate crimes. For sure that there are room for improvements in this study. Instead of focusing the study in New York City areas, we can expand the scope to the whole New York state and conduct analysis at the county level since most tweets don't share their exact location. This will make the spatial random effect more effective when it has many measured levels. Random effects variance estimates will be unstable if the grouping variable has too few levels. For future research, we can leverage the same methodology used in this study to do hate crime prediction for each location. 
 
 
 \newpage

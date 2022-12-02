@@ -194,7 +194,7 @@ $$
 log(\theta_{ij}) = \alpha + \beta X_{i} + u_{i} + s_{i} + \gamma t_{j} + \sigma_{i} t_{j} \tag{4}\\
 $$
 
-The terms which are used in both model 2 and 4 are explained here. $\alpha$ is the intercept, $\beta$ is the coefficient of covariate X at i-th location. $\beta X_{i}$ is the fixed effect of the model. $u_{i} + s_{i}$ is the area random effect. $\gamma t_{j}$ represents the purely temporal term, and $\gamma$ is the global linear trend effect. $\sigma_{i} t_{j}$ represents the spatio-temporal interaction term.
+The terms which are used in both model 2 and 4 are explained here. $\alpha$ is the intercept, $\beta$ is the coefficient of covariate X at i-th location. $\beta X_{i}$ is the fixed effect of the model. $u_{i} + s_{i}$ is the area random effect. $\gamma t_{j}$ represents the purely temporal term, and its coefficient, $\gamma$. $\sigma_{i} t_{j}$ represents the space and time interaction term.
 
 In order to obtain the expected count of hate crime, $E_{ij}$ in the Poisson model, SpatialEpi package ([\textcolor{cyan}{Kim et al, 2018}](https://github.com/rudeboybert/SpatialEpi)) will be used. Popular metrics such as DIC (*Deviance Information Criterion*), CPO (*Conditional Predictive Ordinate*), and WAIC (*Watanabe–Akaike Information Criterion*), will be used as a performance measurement to compare and measure how good a model is. All these metrics are available in the result summary generated from the INLA package (Integrated Nested Laplace Approximation) package ([\textcolor{cyan}{Rue et al, 2009}](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x)).
 
@@ -894,7 +894,7 @@ marginal_tw_p <- inla.smarginal(res_p$marginals.fixed$total_hate_tweets)
 marginal_tw_p <- data.frame(marginal_tw_p)
 marginal_tw_p_plot <- ggplot(marginal_tw_p, aes(x = x, y = y)) + 
   geom_line() + 
-  labs(x = expression(beta[1]), y = "Density") +
+  labs(x = expression(beta), y = "Density") +
   geom_vline(xintercept = 0, col = "blue") + 
   theme_bw()  + 
   ggtitle("Hateful Tweets Coefficient (Poisson)")
@@ -903,7 +903,7 @@ marginal_tm_p <- inla.smarginal(res_p$marginals.fixed$idtime)
 marginal_tm_p <- data.frame(marginal_tm_p)
 marginal_tm_p_plot <-ggplot(marginal_tm_p, aes(x = x, y = y)) + 
   geom_line() + 
-  labs(x = expression(beta[2]), y = "Density") +
+  labs(x = expression(gamma), y = "Density") +
   geom_vline(xintercept = 0, col = "blue") + 
   theme_bw() + 
   ggtitle("Time ID Coefficient (Poisson)")
@@ -914,7 +914,7 @@ marginal_tw_b <- inla.smarginal(res_b$marginals.fixed$total_hate_tweets)
 marginal_tw_b <- data.frame(marginal_tw_b)
 marginal_tw_b_plot <- ggplot(marginal_tw_b, aes(x = x, y = y)) + 
   geom_line() + 
-  labs(x = expression(beta[1]), y = "Density") +
+  labs(x = expression(beta), y = "Density") +
   geom_vline(xintercept = 0, col = "blue") + 
   theme_bw() + 
   ggtitle("Hateful Tweets Coefficient (Binomial)")
@@ -923,7 +923,7 @@ marginal_tm_b <- inla.smarginal(res_b$marginals.fixed$idtime)
 marginal_tm_b <- data.frame(marginal_tm_b)
 marginal_tm_b_plot <- ggplot(marginal_tm_b, aes(x = x, y = y)) + 
   geom_line() + 
-  labs(x = expression(beta[2]), y = "Density") +
+  labs(x = expression(gamma), y = "Density") +
   geom_vline(xintercept = 0, col = "blue") + 
   theme_bw() + 
   ggtitle("Time ID Coefficient (Binomial)")
@@ -934,7 +934,7 @@ annotate_figure(ggarrange(marginal_tw_p_plot,
                           marginal_tm_p_plot, 
                           marginal_tm_b_plot + rremove("y.title"), 
                            ncol = 2, nrow = 2) , 
-          top = text_grob("Posterior Distribution", 
+          top = text_grob("Posterior Distribution \n", 
                           color = "red", 
                           face = "bold", 
                           size = 14))

@@ -2,7 +2,10 @@
 title: |
   <center> DATA 698 </center>
   <center> Capstone Project </center>
+  \bigskip
+  <center> **Association of Hateful Tweets and Hate Crimes in New York City** </center>
   \begin{center}
+  \bigskip
   \bigskip
   \bigskip
   \bigskip
@@ -1053,7 +1056,7 @@ annotate_figure(ggarrange(map1 + theme(legend.position = "none"),
                           plot_legend,
                           ncol = 2, nrow = 2, 
                           labels = c("2019", "2020", "2021")) , 
-          top = text_grob("Relative Risk of Hate Crime for Each Borough \n", 
+          top = text_grob("Posterior Relative Risk Estimates of Hate Crime for Each Borough \n", 
                           color = "red", 
                           face = "bold", 
                           size = 14))

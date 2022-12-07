@@ -179,7 +179,7 @@ $$
 {Y}_{ij} \sim Binomial(n_{ij},p_{ij}) \tag{1}\\
 $$
 
-where ${Y}_{ij}$ is the observed number of hate crime. $n_{ij}$ is the population of potential hate crimes occurred at i-th location in the j-th period of time. $p_{ij}$ is the hate crime rate occurred at i-th location in the j-th period of time. By taking into the spatial and spatial-temporal correlation into account, model 1 above can be written as follows:
+where ${Y}_{ij}$ is the observed number of hate crime. $n_{ij}$ is the population of potential hate crimes occurred at i-th location in the j-th period of time. $p_{ij}$ is the hate crime rate occurred at i-th location in the j-th period of time. By taking the spatial and spatial-temporal correlation into account, model 1 above can be written as follows:
 
 $$
 logit(p_{ij}) = \alpha + \beta X_{i} + u_{i} + s_{i} + \gamma t_{j} + \sigma_{i} t_{j} \tag{2}\\
@@ -199,7 +199,7 @@ $$
 
 The terms which are used in both model 2 and 4 are explained here. $\alpha$ is the intercept, $\beta$ is the coefficient of covariate X at i-th location. $\beta X_{i}$ is the fixed effect of the model. $u_{i} + s_{i}$ is the area random effect. $\gamma t_{j}$ represents the purely temporal term, and its coefficient, $\gamma$. $\sigma_{i} t_{j}$ represents the space and time interaction term.
 
-In order to obtain the expected count of hate crime, $E_{ij}$ in the Poisson model, SpatialEpi package ([\textcolor{cyan}{Kim et al, 2018}](https://github.com/rudeboybert/SpatialEpi)) will be used. Popular metrics such as DIC (*Deviance Information Criterion*), CPO (*Conditional Predictive Ordinate*), and WAIC (*Watanabe–Akaike Information Criterion*), will be used as a performance measurement to compare and measure how good a model is. All these metrics are available in the result summary generated from the INLA package (Integrated Nested Laplace Approximation) package ([\textcolor{cyan}{Rue et al, 2009}](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x)).
+In order to obtain the expected count of hate crime, $E_{ij}$ in the Poisson model, SpatialEpi package ([\textcolor{cyan}{Kim et al, 2018}](https://github.com/rudeboybert/SpatialEpi)) will be used. Popular metrics such as DIC (*Deviance Information Criterion*), CPO (*Conditional Predictive Ordinate*), and WAIC (*Watanabe–Akaike Information Criterion*), will be used as a performance measurement to compare and measure how good a model is. All these metrics are particularly useful in Bayesian model selection problems and are available in the result summary generated from the INLA package (Integrated Nested Laplace Approximation) package ([\textcolor{cyan}{Rue et al, 2009}](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x)).
 
 ## Scope and Limitations
 
@@ -212,11 +212,11 @@ Our scope is to analyze the tweet's data created in the five boroughs of New Yor
 
 # Results
 
-The crime data described as harassment and assault are considered as hate crimes and tweets data which are negative sentiments are selected for analysis in this study. 920 thousand out of 1.2 million of tweets are identified as negative attitude tweets. Many of these negative tweets contain key terms commonly used in hateful messages. In the figure 2, it shows the top 100 most frequent mentioned words.   
+The crime data described as harassment and assault are considered as hate crimes, and tweets data which are negative sentiments are selected for analysis in this study. 920 thousand out of 1.2 million of tweets are identified as negative attitude tweets. Many of these negative tweets contain key terms commonly used in hateful messages. Figure 2 shows the top 100 most frequent mentioned words.   
 
 ![Word clouds of top 100 most often mentioned words in the negative attitude tweets]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\wordcloud.png")
 
-From the observed hate crime rate data, we found that these minority of groups, black, other races and female, are facing higher chance of being harassed and assaulted in most of the boroughs. The figure 3 and 4 below show these trends and particularly Bronx borough has the highest hate crime rate in both race and sex compared to other boroughs.
+From the observed hate crime rate data, we found that the following minority groups; black, other races and female, are facing higher chances of being harassed and assaulted in most of the boroughs. Figure 3 and 4 below show these trends, and particularly the borough of Bronx  has the highest hate crime rate in both race and sex compared to the other boroughs.
 
 ![Total hate crime by race for each borough between 2019 and 2021]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Hate Crime By Race.png"){width=80%}
 
@@ -226,13 +226,13 @@ $$\\[0.5in]$$
 
 \newpage
 
-The observed hate crime rate data and detected negative attitude tweets from year 2019 to 2021 are analyzed. In the figure 5, we can see the trend of hate crimes is pretty stable over the 3 years period with slightly downward in 2020 and then increase again in 2021. In contrast, the negative attitude tweets drop sharply, nearly half compared to previous periods, after July 2020.
+The observed hate crime rate data and detected hateful tweets from year 2019 to 2021 are analyzed. In figure 5, we can see the trend of hate crimes is pretty stable over the 3 year period with a slightly downward trend in 2020, and then increase again in 2021. In contrast, the hateful tweets drop sharply, nearly half compared to previous periods after July 2020.
 
 ![Monthly count of crime and negative attitude tweets between 2019 and 2021]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Monthly Count Crime and Hateful Tweets.png")
 
 \newpage
 
-Now, if we put hate crimes and hateful tweets count together and compare for each borough as shown in the figure 6 and 7, Manhattan has the higher number of hate crime and hateful tweets followed by Bronx, Brooklyn, Queens, and Staten Island.
+Now, if we put hate crimes and hateful tweets count together and compare them for each borough, as shown in figure 6 and 7, Manhattan has the highest number of hate crimes and hateful tweets followed by Bronx, Brooklyn, Queens, and Staten Island.
 
 ![Total hate crime and hateful tweets for each borough between 2019 and 2021]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Total Hate Crime vs Total Hateful Tweets by Borough.png"){width=80%}
 
@@ -242,15 +242,15 @@ $$\\[0.5in]$$
 
 \newpage
 
-Bayesian inference approximation method, INLA (Integrated Nested Laplace Approximation) package ([\textcolor{cyan}{Rue et al, 2009}](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x)), is used to test the hypothesis of whether hateful tweets covariate is statistically significant correlated to the hate crimes and developing trend of relative risk of hate crime occurred in 5 boroughs. 
+Bayesian inference approximation method, INLA (Integrated Nested Laplace Approximation) package ([\textcolor{cyan}{Rue et al, 2009}](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x)), is used to test the hypothesis of whether hateful tweets covariate has a statistically significant correlation to the hate crimes, and developing trend of relative risk of hate crimes occurred in the 5 boroughs. 
 
-Two types of Bayesian models are developed in this study. One model is based on Poisson distribution and another is based on Binomial distribution. Both models are considered as mixed effects model because the model has both fixed and random effects. For model performance evaluation, DIC, WAIC, CPO metrics are used. A smaller the value of these 3 metrics indicates a better prediction quality of the model. The table 1 shows Poisson model has better performance than Binomial model.
+Two types of Bayesian models are developed in this study, one is based on Poisson distribution and the other is based on Binomial distribution. Both models are considered to be mixed effects model, which means each model has both fixed and random effects. For model performance evaluation, DIC, WAIC, CPO metrics are used. A smaller value or closer to zero of these 3 metrics indicates a better model fit. Table 1 shows Poisson model has a better performance than Binomial model.
 
 ![Performance evaluation for Poisson and Binomial distribution models using DIC, WAIC, and CPO metrics]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Evaluation Table.png"){width=80%}
 
 \newpage
 
-From the analysis results as shown in the figure 9, we have observed that the hateful tweets covariate and time id variables which coefficient at 95% confidence interval contain zero for both models. This means uncertainty whether both of these variables have effect on contributing to hate crimes and implies they could have a positive or negative effect on the hate crime happening. Table 2 and 3 shows the coefficient at 95% confidence interval for Poisson models.
+From the analysis results as shown in figure 9, we can observe that the hateful tweets covariate and Time ID variables coefficient at 95% confidence interval contains zero for both models. This means we are uncertain whether both of these variables have any effect on contributing to hate crimes and implies they could have a positive or negative effect on our target variable. Tables 2 and 3 show the coefficient at 95% confidence interval for Poisson models.
 
 ![Posterior distribution of hateful tweets covariate and time id variables coefficient at 95% confidence intervals]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Posterior Distribution of HT and TM Coefficient CI.png"){width=80%}
 
@@ -262,7 +262,7 @@ $$\\[0.3in]$$
 
 \newpage
 
-In addition to verifying the fixed variables' statistical significant, average posteriors of relative risks in each year for the 5 boroughs are computed and developing trends are showed in the figure 12. From the figure, we can see that the relative risk for Manhattan and Bronx has no change over the 3 years period. Because the relative risk of Bronx is much greater than 1, hate crime is more likely to occur in this area than its neighborhoods. The relative risk of Queens and Staten Island have become lower from 2019 to 2021 but Brooklyn has increased. This implies that Brooklyn areas post higher risk in hate crime occurring compared to other 4 boroughs over the 3 years period.
+In addition to verifying the fixed variables' statistical significant, average posteriors of relative risks in each year for the 5 boroughs are also computed and developing trends are showed in figure 12. From the figure, we can see that the relative risk for Manhattan and Bronx has not changed over the 3 years period. Because the relative risk of Bronx is much greater than 1, hate crimes are more likely to occur in this area than its neighborhoods. The relative risk of Queens and Staten Island have become lower from 2019 to 2021 but in Brooklyn it has increased. This shows the developing trend of risk increase of hate crime occurring in Brooklyn areas over the 3 years period.
 
 ![Average posteriors of relative risks in each year for the 5 boroughs]("C:\\Users\\wongs34\\Documents\\School\\DATA 698\\Capstone\\Relative Risk Each Borough.png"){width=80%}
 
@@ -271,70 +271,70 @@ In addition to verifying the fixed variables' statistical significant, average p
 
 # Discussion
 
-First of all, the Syuzhet package ([\textcolor{cyan}{Kim H., 2022}](http://www.digitalhumanities.org/dhq/vol/16/2/000612/000612.html)) has done great job in identifying the negative attitude tweets from the raw data we collected from Twitter in this study. Most of the top 100 terms from the negative tweets dataset are very offensive and we assume that many of these tweets are hate speech. The trend of total count of negative attitude tweets from 2019 and 2021 as shown in the figure 4 is interesting to discuss here. Surprisingly, the total count of negative attitude tweets is starting to drop sharply after July 2020 compared to previous months since January 2019 which are pretty stable. The main factor that caused this to happen probably because people are working from home. It'll be less stressful without commuting to work and in turn expressing more positive attitude toward their daily social media interaction.  
+First of all, the Syuzhet package ([\textcolor{cyan}{Kim H., 2022}](http://www.digitalhumanities.org/dhq/vol/16/2/000612/000612.html)) has done a great job in identifying the negative attitude tweets from the raw data we collected from Twitter in this study. Most of the top 100 terms from the negative tweets dataset are very offensive and we assume that many of these tweets are hate speech. The trend of total count of negative attitude tweets from 2019 and 2021, as shown in figure 4, is interesting to discuss here. Surprisingly, the total count of hateful tweets is starting to drop sharply after July 2020 compared to previous months since January 2019,  which are pretty stable. The main factor that probably contributed to this is the fact that people were working from home. It could have been less stressful without commuting to work and in turn expressing more positive attitude toward their daily social media interaction. 
 
-The analysis results in above have verified that our hypothesis of hateful tweets covariate has no relationship with the hate crimes occurred since its coefficient is statistically insignificant. This matches with the result found in these ([\textcolor{cyan}{Williams et al., 2019}](https://academic.oup.com/bjc/article/60/1/93/5537169); [\textcolor{cyan}{Curiel et al., 2020}](https://www.nature.com/articles/s41599-020-0430-7#Sec8)) studies where there is no association between online hate speech to the hate crimes. But then the observed crime data have shown that hate crime did happen mostly on minority groups especially black, other races, and female.
+The analysis results in above have verified that our hypothesis of hateful tweets covariate has no relationship with hate crimes occurred since its coefficient is statistically insignificant. This matches with the result found in these ([\textcolor{cyan}{Williams et al., 2019}](https://academic.oup.com/bjc/article/60/1/93/5537169); [\textcolor{cyan}{Curiel et al., 2020}](https://www.nature.com/articles/s41599-020-0430-7#Sec8)) studies where there was no association found between online hate speech and hate crimes. But then the observed crime data have shown that hate crimes did happen mostly among minority groups, especially black, other races, and females.
 
-In the formula we built to run with the INLA package, we put hateful tweets as covariate because we think hateful tweets can explain the hate crime risk but the results don't show the association. There are of course other factors we have not taken into account for the model, we are modeling those factors using random effects. We are going to put spatial random effect, it's possible that two areas are close to each other they have similar risk.
+In the formula we built to run in the INLA package, we put hateful tweets as covariate because we think hateful tweets can explain the hate crime risks, but the results don't show the association. There are of course other factors we have not taken into account for the model and we are modeling those factors using random effects. For instance, the spatial random effect as it's possible that two areas that are close to each other have similar risks.
 
-A popular spatial model, BYM ([\textcolor{cyan}{Besag et al., 1991}](https://link.springer.com/article/10.1007/BF00116466)), is used in the model. This model will account for data that is spatially correlated for example, neighboring areas could have similar trend than those areas that are neither sharing border with one another or farther away. These patterns have been can be observed in the figure 8. Poisson model performs better than Binomial model in this study case because there is no fixed of sample size being collected but number of crimes happening each month is random. Because total sample size is a random, an important characteristic of the Poisson distribution, Poisson model performs better in our case study ([\textcolor{cyan}{Howell D., 2003}](https://www.uvm.edu/~statdhtx/StatPages/More_Stuff/PoissonBinomial/PoissonBinom.html)).
+A popular spatial model, BYM ([\textcolor{cyan}{Besag et al., 1991}](https://link.springer.com/article/10.1007/BF00116466)), is used in the model. This model will account for data that is spatially correlated, for example, neighboring areas could have a more similar trend than those areas that are not sharing a border with one another or are farther away. These patterns can be observed in figure 8. The Poisson model performs better than the Binomial model in this study because there is no fixed sample size being collected, but number of crimes happening each month is random. Because total sample size is random, an important characteristic of the Poisson distribution, Poisson model performs better in our case study ([\textcolor{cyan}{Howell D., 2003}](https://www.uvm.edu/~statdhtx/StatPages/More_Stuff/PoissonBinomial/PoissonBinom.html)).
 
-Although the fixed variables, except the intercept, which coefficient is not statistically significant, the spatial random effect components play a big role in the model because we are observing that areas that are close to each other having similar risk for example Brooklyn and Queens. The inverse of relative risk between Bronx and Manhattan, one of the main reasons might be the difference in socio-economic status among the residents between the two areas. If analysis can be done at the zip code level of NYC or at the county level for the New York state, we may be able to observe more examples of areas sharing border having similar risk.
+Although the fixed variables, except the intercept, have a coefficient that is not statistically significant, the spatial random effect components do play a big role in the model because we are observing that areas that are close to each other have similar risks as those seen in Brooklyn and Queens. The inverse of relative risk between Bronx and Manhattan could be due to the difference in socio-economic status among the residents in these two areas. If analysis can be done at the zip code level of NYC or at the county level for the New York state, we may be able to observe more examples of areas that share a border having similar risks.
 
 
 \newpage
 
 # Conclusion
 
-Nowadays, social media plays a critical role in influencing people perception on everything we see, hear, and read in daily. The goal of this study is to find out if hateful tweets exist in Twitter has any association with the hate crimes in the New York City areas and whether minority groups are mostly the victim. Although we found that hateful tweets are not statistically significant correlate with hate crimes, but based on the observed NYPD crime data we do see minority groups which race is black, other, and female are mostly the victim for the hate crimes. For sure that there are room for improvements in this study. Instead of focusing the study in New York City areas, we can expand the scope to the whole New York state and conduct analysis at the county level since most tweets don't share their exact location. This will make the spatial random effect more effective when it has many measured levels. Random effects variance estimates will be unstable if the grouping variable has too few levels. For future research, we can incorporate an unsupervised learning technique such as topic modeling using LDA (Latent Dirichlet Allocation) to further filter out non-hateful tweets but this will require a computer which have a much bigger RAM and better GPU than regular laptop or desktop to perform matrix factorization on dataset size, 920k rows of text in our case. Also, we can leverage the same methodology used in this study to do hate crime prediction for each location. 
+Nowadays, social media plays a critical role in influencing people's perception on everything we see, hear, and read in our daily lives. The goal of this study is to find if hateful tweets existing in Twitter have any association with the hate crimes in the New York City areas and whether minority groups are mostly affected. We found that hateful tweets do not have a statistically significant correlation with hate crimes, but based on the observed NYPD crime data we do see minority groups such as black, other races, and females being mostly the victims of hate crimes. The study definitely has room for improvements and for other considerations. Instead of focusing in the New York City areas, we can expand the scope to the whole state of New York and conduct analysis at the county level as most tweets don't share their exact location. This would make the spatial random effect more effective as it has many measured levels. Random effects variance estimates will be unstable if the grouping variable has too few levels. For future research, we can incorporate an unsupervised learning technique such as topic modeling using LDA (Latent Dirichlet Allocation) to further filter out non-hateful tweets. However, this requires a computer that has a much bigger RAM and better GPU than regular laptop or desktop to perform matrix factorization on large datasets, 920k rows of text in our case. Additionally, we could also leverage the same methodology used in this study to do hate crime prediction for each location. 
 
 
 \newpage
 
 # References
 
-1. Kshirsagar V. (2019, December 24). *Detecting Hate tweets — Twitter Sentiment Analysis*. Towards Data Science. Retrieved from https://towardsdatascience.com/detecting-hate-tweets-twitter-sentiment-analysis-780d8a82d4f6
+1. Kshirsagar V. (2019, December 24). *Detecting Hate tweets — Twitter Sentiment Analysis*. Towards Data Science. Retrieved from https://towardsdatascience.com/detecting-hate-tweets-twitter-sentiment-analysis-780d8a82d4f6.
 
-2. Crabb et al. (2019, May 28). *Classifying Hate Speech: an overview*. Towards Data Science. Retrieved from https://towardsdatascience.com/classifying-hate-speech-an-overview-d307356b9eba
+2. Crabb et al. (2019, May 28). *Classifying Hate Speech: an overview*. Towards Data Science. Retrieved from https://towardsdatascience.com/classifying-hate-speech-an-overview-d307356b9eba.
 
-3. Pang, G. (2022, March 4). *Deep Learning for Hate Speech Detection: A Large-scale Empirical Evaluation*. Towards Data Science. Retrieved from https://towardsdatascience.com/deep-learning-for-hate-speech-detection-a-large-scale-empirical-evaluation-92831ded6bb6
+3. Pang, G. (2022, March 4). *Deep Learning for Hate Speech Detection: A Large-scale Empirical Evaluation*. Towards Data Science. Retrieved from https://towardsdatascience.com/deep-learning-for-hate-speech-detection-a-large-scale-empirical-evaluation-92831ded6bb6.
 
-3. Kim, H. (2022). *Sentiment Analysis: Limits and Progress of the Syuzhet Package and Its Lexicons*. Texas A&M University. Retrieved from http://www.digitalhumanities.org/dhq/vol/16/2/000612/000612.html
+3. Kim, H. (2022). *Sentiment Analysis: Limits and Progress of the Syuzhet Package and Its Lexicons*. Texas A&M University. Retrieved from http://www.digitalhumanities.org/dhq/vol/16/2/000612/000612.html.
 
-4. Williams et al. (2019, July 23). *Hate in the Machine: Anti-Black and Anti-Muslim Social Media Posts as Predictors of Offline Racially and Religiously Aggravated Crime*. The British Journal of Criminology. Retrieved from https://academic.oup.com/bjc/article/60/1/93/5537169
+4. Williams et al. (2019, July 23). *Hate in the Machine: Anti-Black and Anti-Muslim Social Media Posts as Predictors of Offline Racially and Religiously Aggravated Crime*. The British Journal of Criminology. Retrieved from https://academic.oup.com/bjc/article/60/1/93/5537169.
 
-5. Lee et al. (2022, January). *Racism Detection by Analyzing Differential Opinions Through Sentiment Analysis of Tweets Using Stacked Ensemble GCR-NN Model*. ResearchGate. Retrieved from https://www.researchgate.net/publication/357916429_Racism_Detection_by_Analyzing_Differential_Opinions_Through_Sentiment_Analysis_of_Tweets_Using_Stacked_Ensemble_GCR-NN_Model
+5. Lee et al. (2022, January). *Racism Detection by Analyzing Differential Opinions Through Sentiment Analysis of Tweets Using Stacked Ensemble GCR-NN Model*. ResearchGate. Retrieved from https://www.researchgate.net/publication/357916429_Racism_Detection_by_Analyzing_Differential_Opinions_Through_Sentiment_Analysis_of_Tweets_Using_Stacked_Ensemble_GCR-NN_Model.
 
-6. Matsaki L. (2018, September 26). *To Break a Hate-Speech Detection Algorithm, Try 'Love'*. Wired.  Retrieved from https://www.wired.com/story/break-hate-speech-algorithm-try-love/
+6. Matsaki L. (2018, September 26). *To Break a Hate-Speech Detection Algorithm, Try 'Love'*. Wired.  Retrieved from https://www.wired.com/story/break-hate-speech-algorithm-try-love/.
 
-7. Rizwan et al. (2020, January). *Hate-Speech and Offensive Language Detection in Roman Urdu*. ACL Anthology. Retrieved from https://aclanthology.org/2020.emnlp-main.197.pdf
+7. Rizwan et al. (2020, January). *Hate-Speech and Offensive Language Detection in Roman Urdu*. ACL Anthology. Retrieved from https://aclanthology.org/2020.emnlp-main.197.pdf.
 
-8. Miró-Llinares et al. (2018, November 15). *Hate is in the air! But where? Introducing an algorithm to detect hate speech in digital microenvironments*. Springer Link. Retrieved from https://link.springer.com/article/10.1186/s40163-018-0089-1
+8. Miró-Llinares et al. (2018, November 15). *Hate is in the air! But where? Introducing an algorithm to detect hate speech in digital microenvironments*. Springer Link. Retrieved from https://link.springer.com/article/10.1186/s40163-018-0089-1.
 
-9. Curiel et al. (2020, April 02). *Crime and its fear in social media*. Nature. Retrieved from https://www.nature.com/articles/s41599-020-0430-7#Sec8
+9. Curiel et al. (2020, April 02). *Crime and its fear in social media*. Nature. Retrieved from https://www.nature.com/articles/s41599-020-0430-7#Sec8.
 
-10. Sandagiri et al. (2021, January 19). *Detecting Crime Related Twitter Posts using Artificial Neural Networks based Approach*. IEEE Xplore. Retrieved from https://ieeexplore.ieee.org/document/9325485
+10. Sandagiri et al. (2021, January 19). *Detecting Crime Related Twitter Posts using Artificial Neural Networks based Approach*. IEEE Xplore. Retrieved from https://ieeexplore.ieee.org/document/9325485.
 
 11. Kumar, A. (2022, March 20). *Hate Speech Detection Using Machine Learning*. Vitalflux. Retrieved from https://vitalflux.com/hate-speech-detection-using-machine-learning/#:~:text=The%20techniques%20for%20detecting%20hate,to%20find%20patterns%20in%20data.
 
-12. Alnazzawi, N. (2022, May 24). *Using Twitter to Detect Hate Crimes and Their Motivations: The HateMotiv Corpus*. MDPI. Retrieved from https://www.mdpi.com/2306-5729/7/6/69
+12. Alnazzawi, N. (2022, May 24). *Using Twitter to Detect Hate Crimes and Their Motivations: The HateMotiv Corpus*. MDPI. Retrieved from https://www.mdpi.com/2306-5729/7/6/69.
 
-13. Kocon et al. (2021, June 03). *Offensive, aggressive, and hate speech analysis: From data-centric to human-centered approach*. ScienceDirect. Retrieved from https://www.sciencedirect.com/science/article/pii/S0306457321001333
+13. Kocon et al. (2021, June 03). *Offensive, aggressive, and hate speech analysis: From data-centric to human-centered approach*. ScienceDirect. Retrieved from https://www.sciencedirect.com/science/article/pii/S0306457321001333.
 
 14. Shead, S. (2020, November 19). *Facebook claims A.I. now detects 94.7% of the hate speech that gets removed from its platform*. CNBC. Retrieved from https://www.cnbc.com/2020/11/19/facebook-says-ai-detects-94point7percent-of-hate-speech-removed-from-platform.html#:  
 ~:text=Facebook%20announced%20Thursday%20that%20artificial,and%20just%2024%25%20in%202017.
 
 15. Williams, M. & Burnap, P. (2015, June 25 ). *Cyberhate on Social Media in the Aftermath of Woolwich: A Case Study in Computational Criminology and Big Data*. British Journal of Criminology. Retrieved from https://academic.oup.com/bjc/article/56/2/211/2462519
 
-16. Hanes, E. & Machin, S. (2013, September). *Hate Crime in the Wake of Terror Attacks: Evidence from 7/7 and 9/11*. Journal of Contemporary Criminal Justice. Retrieved from https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.1038.9462&rep=rep1&type=pdf
+16. Hanes, E. & Machin, S. (2013, September). *Hate Crime in the Wake of Terror Attacks: Evidence from 7/7 and 9/11*. Journal of Contemporary Criminal Justice. Retrieved from https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.1038.9462&rep=rep1&type=pdf.
 
-17. Hawdon et al. (2016, July 13). *Exposure to Online Hate in Four Nations: A Cross-National Consideration*. ResearchGate. Retrieved from https://www.researchgate.net/publication/303480309_Exposure_to_Online_Hate_in_Four_Nations_A_Cross-National_Consideration
+17. Hawdon et al. (2016, July 13). *Exposure to Online Hate in Four Nations: A Cross-National Consideration*. ResearchGate. Retrieved from https://www.researchgate.net/publication/303480309_Exposure_to_Online_Hate_in_Four_Nations_A_Cross-National_Consideration.
 
-18. Starosta A. (2019, February 15). *CBuilding NLP Classifiers Cheaply With Transfer Learning and Weak Supervision. Medium*. Retrieved from https://medium.com/sculpt/a-technique-for-building-nlp-classifiers-efficiently-with-transfer-learning-and-weak-supervision-a8e2f21ca9c8
+18. Starosta A. (2019, February 15). *CBuilding NLP Classifiers Cheaply With Transfer Learning and Weak Supervision. Medium*. Retrieved from https://medium.com/sculpt/a-technique-for-building-nlp-classifiers-efficiently-with-transfer-learning-and-weak-supervision-a8e2f21ca9c8.
 
-19. Chetty N. & Alathur S. (2018, May 8). *Hate speech review in the context of online social networks*. Retrieved from https://www.sciencedirect.com/science/article/pii/S1359178917301064
+19. Chetty N. & Alathur S. (2018, May 8). *Hate speech review in the context of online social networks*. Retrieved from https://www.sciencedirect.com/science/article/pii/S1359178917301064.
 
-20. Miró-Llinares F. & Rodriguez-Sala J.J. (2016, July). *Cyber Hate Speech on Twitter: Analyzing Disruptive Events from Social Media to Build a Violent Communication and Hate Speech taxonomy*. ResearchGate. Retrieved from https://www.researchgate.net/publication/308487177_Cyber_hate_speech_on_twitter_Analyzing_disruptive_events_from_social_media_to_build_a_violent_communication_and_hate_speech_taxonomy
+20. Miró-Llinares F. & Rodriguez-Sala J.J. (2016, July). *Cyber Hate Speech on Twitter: Analyzing Disruptive Events from Social Media to Build a Violent Communication and Hate Speech taxonomy*. ResearchGate. Retrieved from https://www.researchgate.net/publication/308487177_Cyber_hate_speech_on_twitter_Analyzing_disruptive_events_from_social_media_to_build_a_violent_communication_and_hate_speech_taxonomy.
 
 21. Chen et al. (2015, June 8). *Crime prediction using Twitter sentiment and weather*. IEEE Xplore.  Retrieved from https://ieeexplore.ieee.org/abstract/document/7117012/authors#authors.
 

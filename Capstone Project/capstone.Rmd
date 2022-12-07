@@ -182,7 +182,7 @@ $$
 where ${Y}_{ij}$ is the observed number of hate crime. $n_{ij}$ is the population of potential hate crimes occurred at i-th location in the j-th period of time. $p_{ij}$ is the hate crime rate occurred at i-th location in the j-th period of time. By taking the spatial and spatial-temporal correlation into account, model 1 above can be written as follows:
 
 $$
-logit(p_{ij}) = \alpha + \beta X_{i} + u_{i} + s_{i} + \gamma t_{j} + \sigma_{i} t_{j} \tag{2}\\
+logit(p_{ij}) = \alpha + \beta X_{ij} + u_{i} + s_{i} + \gamma t_{j} + \sigma_{i} t_{j} \tag{2}\\
 $$
 
 where $logit(p_{ij})$ is the logit connectivity function for the hate crime rate. The spatio-temporal Bayesian model based on Poisson distribution is as below.
@@ -194,10 +194,10 @@ $$
 where $E_{ij}$ is the expected number of hate crime occurred at i-th location in the j-th period of time. $\theta_{ij}$ is the relative risk of i-th location in the j-th period of time. Model 3 above can be written as follows:
 
 $$
-log(\theta_{ij}) = \alpha + \beta X_{i} + u_{i} + s_{i} + \gamma t_{j} + \sigma_{i} t_{j} \tag{4}\\
+log(\theta_{ij}) = \alpha + \beta X_{ij} + u_{i} + s_{i} + \gamma t_{j} + \sigma_{i} t_{j} \tag{4}\\
 $$
 
-The terms which are used in both model 2 and 4 are explained here. $\alpha$ is the intercept, $\beta$ is the coefficient of covariate X at i-th location. $\beta X_{i}$ is the fixed effect of the model. $u_{i} + s_{i}$ is the area random effect. $\gamma t_{j}$ represents the purely temporal term, and its coefficient, $\gamma$. $\sigma_{i} t_{j}$ represents the space and time interaction term.
+The terms which are used in both model 2 and 4 are explained here. $\alpha$ is the intercept, $\beta$ is the coefficient of covariate X at i-th location in the j-th period of time. $\beta X_{i}$ is the fixed effect of the model. $u_{i} + s_{i}$ is the area random effect. $\gamma t_{j}$ represents the purely temporal term, and its coefficient, $\gamma$. $\sigma_{i} t_{j}$ represents the space and time interaction term.
 
 In order to obtain the expected count of hate crime, $E_{ij}$ in the Poisson model, SpatialEpi package ([\textcolor{cyan}{Kim et al, 2018}](https://github.com/rudeboybert/SpatialEpi)) will be used. Popular metrics such as DIC (*Deviance Information Criterion*), CPO (*Conditional Predictive Ordinate*), and WAIC (*Watanabe–Akaike Information Criterion*), will be used as a performance measurement to compare and measure how good a model is. All these metrics are particularly useful in Bayesian model selection problems and are available in the result summary generated from the INLA package (Integrated Nested Laplace Approximation) package ([\textcolor{cyan}{Rue et al, 2009}](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2008.00700.x)).
 
